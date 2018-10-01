@@ -1,0 +1,5 @@
+{
+    "env": "dev",
+    "PORT": 4100,
+    "apiUrl": "http://localhost:4000"
+}

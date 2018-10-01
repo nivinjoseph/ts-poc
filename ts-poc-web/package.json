@@ -1,0 +1,57 @@
+{
+    "name": "ts-poc-web",
+    "version": "1.0.0",
+    "description": "TS POC Web App",
+    "main": "index.js",
+    "directories": {
+        "test": "test"
+    },
+    "scripts": {
+        "ts-compile": "tsc -p .",
+        "ts-compile-watch": "npm run ts-compile -- -w",
+        "ts-lint": "tslint -p . -c tslint.json",
+        "ts-build": "npm run ts-compile && npm run ts-lint",
+        "webpack-build": "webpack",
+        "webpack-build-watch": "npm run webpack-build -- -w",
+        "nodemon": "nodemon --ignore client/ --ignore test/ --inspect=4101 ./src/server/server.js",
+        "predev": "npm run ts-build",
+        "dev": "npm run ts-compile-watch & npm run webpack-build-watch & npm run nodemon",
+        "pretest": "npm run ts-build",
+        "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true",
+        "build": "env=prod npm run ts-build && env=prod npm run webpack-build",
+        "start": "node ./src/server/server.js env=prod",
+        "clean-src": "find ./src -name '*.js' -delete -o -name '*.map' -delete -o -name '*.css' -delete",
+        "clean-test": "find ./test -name '*.js' -delete -o -name '*.map' -delete"
+    },
+    "author": "NiviN",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^1.18.1"
+    },
+    "dependencies": {
+        "@nivinjoseph/n-app": "^1.0.55",
+        "@nivinjoseph/n-config": "^1.0.19",
+        "@nivinjoseph/n-defensive": "^1.0.18",
+        "@nivinjoseph/n-exception": "^1.0.14",
+        "@nivinjoseph/n-ext": "^1.0.25",
+        "@nivinjoseph/n-ject": "^1.0.21",
+        "@nivinjoseph/n-log": "^1.0.3",
+        "@nivinjoseph/n-sec": "^2.0.22",
+        "@nivinjoseph/n-svc": "^1.0.8",
+        "@nivinjoseph/n-util": "^1.0.18",
+        "@nivinjoseph/n-validate": "^1.0.12",
+        "@nivinjoseph/n-web": "^2.0.18",
+        "@types/jquery": "^3.3.4",
+        "@types/mocha": "^2.2.48",
+        "@types/node": "^8.10.21",
+        "axios": "^0.17.1",
+        "bulma": "^0.7.1",
+        "jquery": "^3.3.1",
+        "material-design-icons": "^3.0.1",
+        "mocha": "^5.2.0",
+        "moment": "^2.22.2",
+        "ts-node": "^4.1.0",
+        "tslint": "^5.11.0",
+        "typescript": "^3.0.1"
+    }
+}

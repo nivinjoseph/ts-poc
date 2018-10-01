@@ -1,0 +1,46 @@
+{
+    "name": "ts-poc-api",
+    "version": "1.0.0",
+    "description": "TS POC API",
+    "main": "index.js",
+    "scripts": {
+        "ts-compile": "tsc -p .",
+        "ts-compile-watch": "npm run ts-compile -- -w",
+        "ts-lint": "tslint -p . -c tslint.json",
+        "ts-build": "npm run ts-compile && npm run ts-lint",
+        "nodemon": "nodemon --ignore client/ --ignore test/ --inspect=4001 ./src/server.js",
+        "predev": "npm run ts-build",
+        "dev": "npm run ts-compile-watch & npm run nodemon",
+        "pretest": "npm run ts-build",
+        "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true",
+        "start": "node ./src/server.js env=prod",
+        "clean-src": "find ./src -name '*.js' -delete -o -name '*.map' -delete -o -name '*.css' -delete",
+        "clean-test": "find ./test -name '*.js' -delete -o -name '*.map' -delete"
+    },
+    "author": "NiviN",
+    "license": "ISC",
+    "devDependencies": {
+        "nodemon": "^1.18.1"
+    },
+    "dependencies": {
+        "@nivinjoseph/n-config": "^1.0.19",
+        "@nivinjoseph/n-defensive": "^1.0.18",
+        "@nivinjoseph/n-exception": "^1.0.14",
+        "@nivinjoseph/n-ext": "^1.0.25",
+        "@nivinjoseph/n-ject": "^1.0.21",
+        "@nivinjoseph/n-log": "^1.0.3",
+        "@nivinjoseph/n-sec": "^2.0.22",
+        "@nivinjoseph/n-util": "^1.0.18",
+        "@nivinjoseph/n-validate": "^1.0.12",
+        "@nivinjoseph/n-web": "^2.0.18",
+        "@types/mocha": "^2.2.48",
+        "@types/node": "^8.10.21",
+        "axios": "^0.17.1",
+        "buffer": "^5.1.0",
+        "mocha": "^5.2.0",
+        "moment": "^2.22.2",
+        "ts-node": "^4.1.0",
+        "tslint": "^5.11.0",
+        "typescript": "^3.0.1"
+    }
+}
