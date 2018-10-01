@@ -100,9 +100,9 @@ const moduleRules: Array<any> = [
 ];
 
 const plugins = [
-    new cleanWebpackPlugin(["client/dist"]),
+    new cleanWebpackPlugin(["src/client/dist"]),
     new htmlWebpackPlugin({
-        template: "server/controllers/index/index-view.html",
+        template: "src/server/controllers/index/index-view.html",
         filename: "index-view.html",
         hash: true
     })
@@ -138,10 +138,10 @@ if (!isDev)
 module.exports = {
     mode: isDev ? "development" : "production",
     target: "web",
-    entry: ["./client/client.js"],
+    entry: ["./src/client/client.js"],
     output: {
         filename: "client.bundle.js",
-        path: path.resolve(__dirname, "client/dist"),
+        path: path.resolve(__dirname, "src/client/dist"),
         publicPath: "/"
     },
     devtool: isDev ? "inline-source-map" : "source-map",

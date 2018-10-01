@@ -37,7 +37,7 @@ export class RemoteTodoService implements TodoService
         this._dialogService.showLoadingScreen();
         try 
         {
-            const response = await this._api.get<ReadonlyArray<Todo>>("api/Todo");
+            const response = await this._api.get<ReadonlyArray<Todo>>("api/query/getAllTodos");
             return response.data.map(t =>
             {
                 t.isDeleted = false;
@@ -62,7 +62,7 @@ export class RemoteTodoService implements TodoService
         this._dialogService.showLoadingScreen();
         try 
         {
-            const response = await this._api.get(`api/Todo/${id.trim().toLowerCase()}`);
+            const response = await this._api.get(`api/query/getTodo/${id.trim().toLowerCase()}`);
             const todo: Todo = response.data;
             todo.isDeleted = false;
             return todo;
@@ -91,7 +91,7 @@ export class RemoteTodoService implements TodoService
         this._dialogService.showLoadingScreen();
         try
         {
-            const response = await this._api.post("api/Todo", command);
+            const response = await this._api.post("api/command/createTodo", command);
             this._dialogService.showSuccessMessage("Successfully created Todo.");
             const todo: Todo = response.data;
             todo.isDeleted = false;
@@ -114,10 +114,8 @@ export class RemoteTodoService implements TodoService
         given(title, "title").ensureHasValue().ensureIsString();
         given(description, "description").ensureIsString();
         
-        id = id.trim().toLowerCase();
-        
         const command = {
-            id,
+            id: id.trim().toLowerCase(),
             title: title.trim(),
             description: description ? description.trim() : ""
         };
@@ -126,7 +124,7 @@ export class RemoteTodoService implements TodoService
         try 
         {
             // @ts-ignore
-            const response = await this._api.put(`api/Todo/${id}`, command);
+            const response = await this._api.post("api/command/updateTodo", command);
             this._dialogService.showSuccessMessage("Successfully updated Todo.");
         }
         catch (error)
@@ -144,11 +142,15 @@ export class RemoteTodoService implements TodoService
     {
         given(id, "id").ensureHasValue().ensureIsString();
         
+        const command = {
+            id: id.trim().toLowerCase()
+        };
+        
         this._dialogService.showLoadingScreen();
         try 
         {
             // @ts-ignore
-            const response = await this._api.put(`api/Todo/${id.trim().toLowerCase()}/MarkAsCompleted`);
+            const response = await this._api.post("api/command/markTodoAsCompleted", command);
             this._dialogService.showSuccessMessage("Successfully marked Todo as complete.");
         }
         catch (error)
@@ -166,11 +168,15 @@ export class RemoteTodoService implements TodoService
     {
         given(id, "id").ensureHasValue().ensureIsString();
         
+        const command = {
+            id: id.trim().toLowerCase()
+        };
+        
         this._dialogService.showLoadingScreen();
         try 
         {
             // @ts-ignore
-            const response = await this._api.delete(`api/Todo/${id.trim().toLowerCase()}`);
+            const response = await this._api.post("api/command/deleteTodo", command);
             this._dialogService.showSuccessMessage("Successfully deleted Todo.");
         }
         catch (error)

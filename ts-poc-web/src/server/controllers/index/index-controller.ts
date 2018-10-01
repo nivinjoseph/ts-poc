@@ -4,7 +4,7 @@ import { ConfigurationManager } from "@nivinjoseph/n-config";
 
 @route("/*")
 @httpGet
-@view("~/client/dist/index-view.html")
+@view("~/src/client/dist/index-view.html")
 export class IndexController extends Controller
 {
     public execute(): Promise<any>

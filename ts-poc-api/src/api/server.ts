@@ -26,6 +26,7 @@ class Installer implements ComponentInstaller
 const server = new WebApp(ConfigurationManager.getConfig<number>("PORT"))
     .useInstaller(new Installer())
     .registerControllers(...controllers)
-    .registerExceptionHandler(AppExceptionHandler);
+    .registerExceptionHandler(AppExceptionHandler)
+    .enableCors();
 
 server.bootstrap();

@@ -28,6 +28,7 @@ export class GetAllTodosController extends Controller
             ({
                 id: t.id,
                 title: t.title,
+                description: t.description,
                 isCompleted: t.isCompleted
             }));
     }
