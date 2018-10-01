@@ -1,0 +1,1 @@
+POC to prove full-stack development using TypeScript.
