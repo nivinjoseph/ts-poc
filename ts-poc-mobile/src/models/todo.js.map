@@ -1,0 +1,1 @@
+{"version":3,"file":"todo.js","sourceRoot":"","sources":["todo.ts"],"names":[],"mappings":"","sourcesContent":["export interface Todo\n{\n    id: string;\n    title: string;\n    description: string;\n    isCompleted: boolean;\n    isDeleted: boolean;\n}"]}

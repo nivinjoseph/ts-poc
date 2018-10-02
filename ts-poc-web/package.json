@@ -37,7 +37,6 @@
         "@nivinjoseph/n-ject": "^1.0.21",
         "@nivinjoseph/n-log": "^1.0.3",
         "@nivinjoseph/n-sec": "^2.0.22",
-        "@nivinjoseph/n-svc": "^1.0.8",
         "@nivinjoseph/n-util": "^1.0.18",
         "@nivinjoseph/n-validate": "^1.0.12",
         "@nivinjoseph/n-web": "^2.0.18",

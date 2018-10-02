@@ -1,0 +1,1 @@
+{"version":3,"file":"routes.js","sourceRoot":"","sources":["routes.ts"],"names":[],"mappings":";;AAAa,QAAA,SAAS,GAAG,QAAQ,CAAC;AACrB,QAAA,UAAU,GAAG,sBAAsB,CAAC","sourcesContent":["export const listTodos = \"/todos\";\nexport const manageTodo = \"/manage?{id?:string}\";"]}
