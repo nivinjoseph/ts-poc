@@ -20,27 +20,25 @@
     "author": "NiviN",
     "license": "ISC",
     "devDependencies": {
-        "nodemon": "^1.18.1"
+        "nodemon": "^1.18.4"
     },
     "dependencies": {
-        "@nivinjoseph/n-config": "^1.0.19",
-        "@nivinjoseph/n-defensive": "^1.0.18",
-        "@nivinjoseph/n-exception": "^1.0.14",
-        "@nivinjoseph/n-ext": "^1.0.25",
-        "@nivinjoseph/n-ject": "^1.0.21",
-        "@nivinjoseph/n-log": "^1.0.3",
-        "@nivinjoseph/n-sec": "^2.0.22",
-        "@nivinjoseph/n-util": "^1.0.18",
-        "@nivinjoseph/n-validate": "^1.0.12",
-        "@nivinjoseph/n-web": "^2.0.18",
-        "@types/mocha": "^2.2.48",
+        "@nivinjoseph/n-config": "^1.0.20",
+        "@nivinjoseph/n-defensive": "^1.0.19",
+        "@nivinjoseph/n-exception": "^1.0.15",
+        "@nivinjoseph/n-ext": "^1.0.28",
+        "@nivinjoseph/n-ject": "^1.0.22",
+        "@nivinjoseph/n-log": "^1.0.5",
+        "@nivinjoseph/n-sec": "^2.0.23",
+        "@nivinjoseph/n-util": "^1.0.19",
+        "@nivinjoseph/n-validate": "^1.0.13",
+        "@nivinjoseph/n-web": "^2.0.19",
+        "@types/mocha": "^5.2.5",
         "@types/node": "^8.10.21",
-        "axios": "^0.17.1",
-        "buffer": "^5.1.0",
         "mocha": "^5.2.0",
         "moment": "^2.22.2",
-        "ts-node": "^4.1.0",
+        "ts-node": "^7.0.1",
         "tslint": "^5.11.0",
-        "typescript": "^3.0.1"
+        "typescript": "^3.1.1"
     }
 }
