@@ -39,7 +39,7 @@ jspm_packages
 # Ignore Mac .DS_Store files
 .DS_Store
 
-# Ignores compiled TypeScript files
+
 ts-poc-api/src/**/*.js
 ts-poc-api/src/**/*.map
 ts-poc-api/test/**/*.js
@@ -49,16 +49,19 @@ ts-poc-web/src/**/*.js
 ts-poc-web/src/**/*.map
 ts-poc-web/test/**/*.js
 ts-poc-web/test/**/*.map
-
-# Ignores compiled css files
 ts-poc-web/src/**/*.css
-
-# Client dist folder, this is a build artifact of test-app
 ts-poc-web/src/client/dist
-
-# Webpack config compiled artifacts
 ts-poc-web/webpack.config.js
 ts-poc-web/webpack.config.js.map
+
+ts-poc-mobile/src/**/*.js
+ts-poc-mobile/src/**/*.map
+ts-poc-mobile/test/**/*.js
+ts-poc-mobile/test/**/*.map
+ts-poc-mobile/src/**/*.css
+ts-poc-mobile/src/www
+ts-poc-mobile/webpack.config.js
+ts-poc-mobile/webpack.config.js.map
 
 # # Config files
 # config.json

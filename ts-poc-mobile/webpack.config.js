@@ -103,7 +103,22 @@ const plugins = [
         template: "src/app.html",
         filename: "index.html",
         hash: true
-    })
+    }),
+    {
+        apply: function (compiler) {
+            compiler.hooks.compilation.tap("ConfigPlugin", (compilation) => {
+                compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync("ConfigPlugin", (data, cb) => {
+                    data.html = data.html.replace("<body>", `
+                                <body>
+                                <script>
+                                    window.config = "${Buffer.from(JSON.stringify(n_config_1.ConfigurationManager.configObject), "utf8").toString("hex")}";
+                                </script>
+                            `);
+                    cb(null, data);
+                });
+            });
+        }
+    }
 ];
 if (!isDev) {
     moduleRules.push({
@@ -114,9 +129,11 @@ if (!isDev) {
                 presets: [["@babel/preset-env", {
                             debug: false,
                             targets: {
-                                browsers: ["> 1%", "Chrome >= 41"]
+                                chrome: "41"
                             },
-                            useBuiltIns: "entry"
+                            useBuiltIns: "entry",
+                            forceAllTransforms: true,
+                            modules: "commonjs"
                         }]]
             }
         }

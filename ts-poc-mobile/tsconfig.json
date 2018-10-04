@@ -16,5 +16,8 @@
         "emitDecoratorMetadata": true,
         "removeComments": true,
         "forceConsistentCasingInFileNames": true
-    }
+    },
+    "exclude": [
+        "./node_modules"
+    ]
 }

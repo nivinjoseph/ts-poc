@@ -10,17 +10,23 @@
         "ts-build": "npm run ts-compile && npm run ts-lint",
         "webpack-build": "webpack",
         "webpack-build-watch": "npm run webpack-build -- -w",
-        "build": "npm run ts-build && npm run webpack-build",
+        "cap-copy-watch": "watch 'cap copy' ./src/www --interval=3",
+        "predev": "npm run ts-build",
+        "dev": "npm run ts-compile-watch & npm run webpack-build-watch",
+        "build": "npm run ts-build && npm run webpack-build && cap copy",
         "pretest": "npm run ts-build",
         "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true"
     },
     "author": "NiviN",
     "license": "ISC",
     "dependencies": {
+        "@capacitor/android": "^1.0.0-beta.8",
         "@capacitor/cli": "^1.0.0-beta.8",
         "@capacitor/core": "^1.0.0-beta.8",
+        "@capacitor/ios": "^1.0.0-beta.8",
+        "@ionic/core": "^4.0.0-beta.12",
         "@nivinjoseph/n-app": "^1.0.56",
-        "@nivinjoseph/n-config": "^1.0.20",
+        "@nivinjoseph/n-config": "^1.0.21",
         "@nivinjoseph/n-defensive": "^1.0.19",
         "@nivinjoseph/n-exception": "^1.0.15",
         "@nivinjoseph/n-ext": "^1.0.28",
@@ -37,6 +43,7 @@
         "moment": "^2.22.2",
         "ts-node": "^7.0.1",
         "tslint": "^5.11.0",
-        "typescript": "^3.1.1"
+        "typescript": "^3.1.1",
+        "watch": "^1.0.2"
     }
 }

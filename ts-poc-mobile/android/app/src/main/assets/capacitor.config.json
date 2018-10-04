@@ -1,0 +1,6 @@
+{
+  "appId": "com.todo.app",
+  "appName": "Todo Mobile",
+  "bundledWebRuntime": false,
+  "webDir": "./src/www"
+}

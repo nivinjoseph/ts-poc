@@ -105,7 +105,30 @@ const plugins = [
         template: "src/app.html",
         filename: "index.html",
         hash: true
-    })
+    }),
+    {
+        apply: function (compiler: any)
+        {
+            compiler.hooks.compilation.tap("ConfigPlugin", (compilation: any) =>
+            {
+                compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync(
+                    "ConfigPlugin",
+                    (data: any, cb: any) =>
+                    {
+                        data.html = data.html.replace("<body>",
+                            `
+                                <body>
+                                <script>
+                                    window.config = "${Buffer.from(JSON.stringify(ConfigurationManager.configObject), "utf8").toString("hex")}";
+                                </script>
+                            `);
+
+                        cb(null, data);
+                    }
+                );
+            });
+        }
+    }
 ];
 
 if (!isDev)
@@ -118,9 +141,12 @@ if (!isDev)
                 presets: [["@babel/preset-env", {
                     debug: false,
                     targets: {
-                        browsers: ["> 1%", "Chrome >= 41"]
+                        // browsers: ["> 1%", "Chrome >= 41"],
+                        chrome: "41" // this is what googles web crawler uses
                     },
-                    useBuiltIns: "entry"
+                    useBuiltIns: "entry",
+                    forceAllTransforms: true,
+                    modules: "commonjs"
                 }]]
             }
         }
