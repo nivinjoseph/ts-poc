@@ -13,6 +13,7 @@
         "dev": "npm run ts-compile-watch & npm run nodemon",
         "pretest": "npm run ts-build",
         "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true",
+        "build": "env=prod npm run ts-build",
         "start": "node ./src/api/server.js env=prod",
         "clean-src": "find ./src -name '*.js' -delete -o -name '*.map' -delete -o -name '*.css' -delete",
         "clean-test": "find ./test -name '*.js' -delete -o -name '*.map' -delete"

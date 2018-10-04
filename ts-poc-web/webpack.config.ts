@@ -118,9 +118,12 @@ if (!isDev)
                 presets: [["@babel/preset-env", {
                     debug: false,
                     targets: {
-                        browsers: ["> 1%", "Chrome >= 41"]
+                        // browsers: ["> 1%", "Chrome >= 41"],
+                        chrome: "41" // this is what googles web crawler uses
                     },
-                    useBuiltIns: "entry"
+                    useBuiltIns: "entry",
+                    forceAllTransforms: true,
+                    modules: "commonjs"
                 }]]
             }
         }

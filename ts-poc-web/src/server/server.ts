@@ -5,7 +5,7 @@ import { IndexController } from "./controllers/index/index-controller";
 
 const server = new WebApp(ConfigurationManager.getConfig<number>("PORT"))
     .enableWebPackDevMiddleware()
-    .registerStaticFilePath("client/dist", true)
+    .registerStaticFilePath("src/client/dist", true)
     .registerControllers(IndexController);
 
 server.bootstrap();
