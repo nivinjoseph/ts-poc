@@ -24,7 +24,6 @@
         "@capacitor/cli": "^1.0.0-beta.8",
         "@capacitor/core": "^1.0.0-beta.8",
         "@capacitor/ios": "^1.0.0-beta.8",
-        "@ionic/core": "^4.0.0-beta.12",
         "@nivinjoseph/n-app": "^1.0.56",
         "@nivinjoseph/n-config": "^1.0.21",
         "@nivinjoseph/n-defensive": "^1.0.19",
@@ -41,9 +40,11 @@
         "jquery": "^3.3.1",
         "mocha": "^5.2.0",
         "moment": "^2.22.2",
+        "onsenui": "^2.10.4",
         "ts-node": "^7.0.1",
         "tslint": "^5.11.0",
         "typescript": "^3.1.1",
+        "vue-onsenui": "^2.6.1",
         "watch": "^1.0.2"
     }
 }

@@ -1,15 +1,17 @@
 import "@babel/polyfill";
-// import "material-design-icons/iconfont/material-icons.css";
+import "onsenui/css/onsenui.css";
+import "onsenui/css/onsen-css-components.css";
 // import "./styles/main.scss";
-// import "@ionic/core";
 import { ClientApp, Vue } from "@nivinjoseph/n-app";
+// @ts-ignore
+import * as VueOnsen from "vue-onsenui";
 import * as Routes from "./pages/routes";
 import { ServicesInstaller } from "./services/services-installer";
 import { components } from "./components/components";
 import { pages } from "./pages/pages";
 
 
-Vue.config.ignoredElements = [/^ion-/];
+Vue.use(VueOnsen);
 
 const client = new ClientApp("#app")
     .useInstaller(new ServicesInstaller())
