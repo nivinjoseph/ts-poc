@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 import { ConfigurationManager } from "@nivinjoseph/n-config";
+import { HtmlWebpackNConfigPlugin } from "@nivinjoseph/html-webpack-n-config-plugin";
 
 const env = ConfigurationManager.getConfig<string>("env");
 console.log("WEBPACK ENV", env);
@@ -106,29 +107,10 @@ const plugins = [
         filename: "index.html",
         hash: true
     }),
-    {
-        apply: function (compiler: any)
-        {
-            compiler.hooks.compilation.tap("ConfigPlugin", (compilation: any) =>
-            {
-                compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync(
-                    "ConfigPlugin",
-                    (data: any, cb: any) =>
-                    {
-                        data.html = data.html.replace("<body>",
-                            `
-                                <body>
-                                <script>
-                                    window.config = "${Buffer.from(JSON.stringify(ConfigurationManager.configObject), "utf8").toString("hex")}";
-                                </script>
-                            `);
-
-                        cb(null, data);
-                    }
-                );
-            });
-        }
-    }
+    new HtmlWebpackNConfigPlugin({
+        env: ConfigurationManager.getConfig("env"),
+        apiUrl: ConfigurationManager.getConfig("apiUrl")
+    })
 ];
 
 if (!isDev)

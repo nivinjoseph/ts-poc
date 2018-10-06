@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const n_config_1 = require("@nivinjoseph/n-config");
+const html_webpack_n_config_plugin_1 = require("@nivinjoseph/html-webpack-n-config-plugin");
 const env = n_config_1.ConfigurationManager.getConfig("env");
 console.log("WEBPACK ENV", env);
 const isDev = env === "dev";
@@ -104,21 +105,10 @@ const plugins = [
         filename: "index.html",
         hash: true
     }),
-    {
-        apply: function (compiler) {
-            compiler.hooks.compilation.tap("ConfigPlugin", (compilation) => {
-                compilation.hooks.htmlWebpackPluginAfterHtmlProcessing.tapAsync("ConfigPlugin", (data, cb) => {
-                    data.html = data.html.replace("<body>", `
-                                <body>
-                                <script>
-                                    window.config = "${Buffer.from(JSON.stringify(n_config_1.ConfigurationManager.configObject), "utf8").toString("hex")}";
-                                </script>
-                            `);
-                    cb(null, data);
-                });
-            });
-        }
-    }
+    new html_webpack_n_config_plugin_1.HtmlWebpackNConfigPlugin({
+        env: n_config_1.ConfigurationManager.getConfig("env"),
+        apiUrl: n_config_1.ConfigurationManager.getConfig("apiUrl")
+    })
 ];
 if (!isDev) {
     moduleRules.push({
