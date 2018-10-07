@@ -1,30 +1,28 @@
-<div class="manage-todo-view">
-    <h1 class="title">
-        {{operation}}
-    </h1>
-    
-    <form>
-        <div class="field">
-            <label class="label">Title</label>
-            <div class="control">
-                <input class="input" type="text" v-model="title" placeholder="Title">
-            </div>
-        </div>
+<div class="manage-todo">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="center">{{operation}}</div>
+        </v-ons-toolbar>
         
-        <div class="field">
-            <label class="label">Description</label>
-            <div class="control">
-                <textarea class="textarea" v-model="description" placeholder="description"></textarea>
-            </div>
-        </div>
+        <v-ons-list>
+            <v-ons-list-header>Title</v-ons-list-header>
+            <v-ons-list-item>
+                <v-ons-input type="text" v-model="title"></v-ons-input>
+            </v-ons-list-item>
+            
+            <v-ons-list-header>Description</v-ons-list-header>
+            <v-ons-list-item>
+                <textarea class="textarea textarea--transparent" rows="3" v-model="description"></textarea>
+            </v-ons-list-item>
+        </v-ons-list>
         
-        <div class="field is-grouped">
-            <div class="control">
-                <button class="button is-link" v-on:click.prevent="save">Save</button>
+        <v-ons-bottom-toolbar>
+            <div class="center">
+                <v-ons-button v-on:click.prevent="save">Save</v-ons-button>
+                <router-link to="/todos">
+                    <v-ons-button modifier="quiet">Cancel</v-ons-button>
+                </router-link>
             </div>
-            <div class="control">
-                <router-link class="button is-text" to="/todos">Cancel</router-link>
-            </div>
-        </div>
-    </form>
+        </v-ons-bottom-toolbar>
+    </v-ons-page>
 </div>

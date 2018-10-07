@@ -1,5 +1,5 @@
-<div class="todo-view" v-if="!todo.isDeleted">
-    <div class="card">
+<div class="todo" v-if="!todo.isDeleted">
+    <v-ons-card>
         <header class="card-header">
             <p class="card-header-title">
                 {{todo.title}}
@@ -20,5 +20,5 @@
             <a href="#" class="card-footer-item" v-on:click.prevent="editTodo">Edit</a>
             <a href="#" class="card-footer-item" v-on:click.prevent="deleteTodo">Delete</a>
         </footer>
-    </div>
+    </v-ons-card>
 </div>

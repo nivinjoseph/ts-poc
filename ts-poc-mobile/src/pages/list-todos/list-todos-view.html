@@ -1,13 +1,21 @@
-<div class="list-todos-view">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <router-link to="/manage">
-                <v-ons-button>Create Todo</v-ons-button>
-            </router-link>
-        </div>
-    </nav>
-    
-    <div class="todo-container">
-        <todo v-for="todo in todos" v-bind:key="todo.id" v-bind:value="todo"></todo>
-    </div>
+<div class="list-todos">
+    <v-ons-page>
+        <v-ons-toolbar>
+            <div class="left">
+                <router-link to="/manage">
+                    <v-ons-button>Create Todo</v-ons-button>
+                </router-link>
+            </div>
+        </v-ons-toolbar>
+        
+        <v-ons-list>
+            <v-ons-list-item v-for="todo in todos" v-bind:key="todo.id">
+                <todo v-bind:value="todo"></todo>
+            </v-ons-list-item>
+        </v-ons-list>
+        
+        <!-- <div class="todo-container">
+            <todo v-for="todo in todos" v-bind:key="todo.id" v-bind:value="todo"></todo>
+        </div> -->
+    </v-ons-page>
 </div>

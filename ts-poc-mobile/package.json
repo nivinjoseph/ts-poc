@@ -12,8 +12,10 @@
         "webpack-build-watch": "npm run webpack-build -- -w",
         "cap-copy-watch": "watch 'cap copy' ./src/www --interval=3",
         "predev": "npm run ts-build",
-        "dev": "npm run ts-compile-watch & npm run webpack-build-watch",
+        "x-dev": "npm run ts-compile-watch & npm run webpack-build-watch",
         "build": "npm run ts-build && npm run webpack-build && cap copy",
+        "ios": "cap opne ios",
+        "android": "cap open android",
         "pretest": "npm run ts-build",
         "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true"
     },
