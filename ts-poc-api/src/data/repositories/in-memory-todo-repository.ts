@@ -1,45 +1,60 @@
 import { TodoRepository } from "../../domain/repositories/todo-repository";
-import { Todo } from "../../domain/models/todo";
+import { Todo } from "../../domain/models/todo/todo";
 import { given } from "@nivinjoseph/n-defensive";
 import { TodoNotFoundException } from "../exceptions/todo-not-found-exception";
 
 
 export class InMemoryTodoRepository implements TodoRepository
 {
-    private readonly _todos: Array<Todo>;
+    private readonly _todos: { [index: string]: StorageModel };
     
     
     public constructor()
     {
-        this._todos = new Array<Todo>();
+        this._todos = {};
     }
     
     
     public getAll(): Promise<ReadonlyArray<Todo>>
     {
-        return Promise.resolve(this._todos);
+        const result = new Array<Todo>();
+
+        for (let key in this._todos)
+        {
+            result.push(Todo.deserialize(this._todos[key].data));
+        }
+
+        return Promise.resolve(result.orderByDesc(t => t.updatedAt));
     }
     
     public get(id: string): Promise<Todo>
     {
         given(id, "id").ensureHasValue().ensureIsString();
         
-        const todo = this._todos.find(t => t.id === id);
-        if (!todo)
+        if (!this._todos[id])
             return Promise.reject(new TodoNotFoundException(id));
         
-        return Promise.resolve(todo);
+        const result = Todo.deserialize(this._todos[id].data);
+        return Promise.resolve(result);
     }
     
     public save(todo: Todo): Promise<void>
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
+
+        const data: any = todo.serialize();
+
+        const storageEntity: StorageModel = {
+            id: todo.id,
+            version: todo.version,
+            updatedAt: todo.updatedAt,
+            data,
+            query: data.$state
+        };
+
+        console.log(JSON.stringify(storageEntity));
         
-        const oldTodo = this._todos.find(t => t.id === todo.id);
-        if (oldTodo)
-            this._todos.remove(oldTodo);
-        
-        this._todos.push(todo);
+        this._todos[todo.id] = storageEntity;
         
         return Promise.resolve();
     }
@@ -47,11 +62,19 @@ export class InMemoryTodoRepository implements TodoRepository
     public  delete(id: string): Promise<void>
     {
         given(id, "string").ensureHasValue().ensureIsString();
-        
-        const todo = this._todos.find(t => t.id === id);
-        if (todo)
-            this._todos.remove(todo);
+
+        if (this._todos[id])
+            delete this._todos[id];
         
         return Promise.resolve();
     }
+}
+
+interface StorageModel
+{
+    id: string;
+    version: number;
+    updatedAt: number;
+    data: object;
+    query: object;
 }
