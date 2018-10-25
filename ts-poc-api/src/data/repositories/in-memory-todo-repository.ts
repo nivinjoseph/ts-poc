@@ -46,7 +46,7 @@ export class InMemoryTodoRepository implements TodoRepository
 
         const storageEntity: StorageModel = {
             id: todo.id,
-            version: todo.version,
+            version: todo.currentVersion,
             updatedAt: todo.updatedAt,
             data,
             query: data.$state
