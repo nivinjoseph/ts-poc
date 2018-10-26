@@ -1,4 +1,11 @@
 {
     "env": "dev",
-    "PORT": 4000
+    "PORT": 4000,
+    "dbConfig": {
+        "host": "localhost",
+        "port": 5432,
+        "database": "tspocdb",
+        "username": "postgres",
+        "password": "p@ssw0rd"
+    }
 }

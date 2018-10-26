@@ -2,7 +2,7 @@ import { given } from "@nivinjoseph/n-defensive";
 import "@nivinjoseph/n-ext";
 import { TodoState } from "./todo-state";
 import { TodoMarkedAsCompletedEvent } from "./events/todo-marked-as-completed-event";
-import { AggregateRoot } from "./base/aggregate-root";
+import { AggregateRoot, SerializedAggregateRoot, AggregateState } from "@nivinjoseph/n-domain";
 import { TodoTitleUpdatedEvent } from "./events/todo-title-updated-event";
 import { TodoDescriptionUpdatedEvent } from "./events/todo-description-updated-event";
 import { TodoCreatedEvent } from "./events/todo-created-event";
@@ -51,7 +51,7 @@ export class Todo extends AggregateRoot<TodoState>
             TodoMarkedAsCompletedEvent
         ];
 
-        return AggregateRoot.deserialize(Todo, eventTypes, data) as Todo;
+        return AggregateRoot.deserialize(Todo, eventTypes, data as SerializedAggregateRoot<AggregateState>) as Todo;
     }
 
 

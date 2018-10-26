@@ -1,9 +1,10 @@
-import { TodoSourcedEvent } from "./todo-sourced-event";
+import { TodoDomainEvent } from "./todo-domain-event";
 import { TodoState } from "../todo-state";
 import { given } from "@nivinjoseph/n-defensive";
+import { SerializedDomainEvent } from "@nivinjoseph/n-domain";
 
 
-export class TodoDescriptionUpdatedEvent extends TodoSourcedEvent
+export class TodoDescriptionUpdatedEvent extends TodoDomainEvent
 {
     private readonly _description: string;
 
@@ -15,10 +16,11 @@ export class TodoDescriptionUpdatedEvent extends TodoSourcedEvent
         this._description = description;
     }
 
-    public static deserializeEvent(data: any | object): TodoDescriptionUpdatedEvent
+    public static deserializeEvent(data: SerializedDomainEvent | any): TodoDescriptionUpdatedEvent
     {
         given(data, "data").ensureHasValue()
             .ensureHasStructure({
+                $name: "string",
                 $occurredAt: "number",
                 $version: "number",
                 "description?": "string"

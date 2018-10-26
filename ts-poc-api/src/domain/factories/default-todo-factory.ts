@@ -4,6 +4,7 @@ import { given } from "@nivinjoseph/n-defensive";
 import { Uuid } from "@nivinjoseph/n-sec";
 import * as Moment from "moment";
 import { TodoCreatedEvent } from "../models/todo/events/todo-created-event";
+import "@nivinjoseph/n-ext";
 
 
 export class DefaultTodoFactory implements TodoFactory
@@ -13,7 +14,7 @@ export class DefaultTodoFactory implements TodoFactory
         given(title, "title").ensureHasValue().ensureIsString();
         given(description, "description").ensureIsString();
         
-        const id = Uuid.create();
+        const id = Uuid.create().replaceAll("-", "");
         // const createdAt = Moment().valueOf();
         title = title.trim();
         description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null;

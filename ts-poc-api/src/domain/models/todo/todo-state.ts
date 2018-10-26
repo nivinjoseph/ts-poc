@@ -1,4 +1,4 @@
-import { AggregateState } from "./base/aggregate-state";
+import { AggregateState } from "@nivinjoseph/n-domain";
 
 
 export interface TodoState extends AggregateState
