@@ -1,5 +1,6 @@
 import { AggregateState } from "./aggregate-state";
 import { given } from "@nivinjoseph/n-defensive";
+import { SerializedDomainEvent } from "./serialized-domain-event";
 
 
 export abstract class DomainEvent<T extends AggregateState>
@@ -37,7 +38,7 @@ export abstract class DomainEvent<T extends AggregateState>
         state.version = this._version + 1;
     }
 
-    public serialize(): object
+    public serialize(): SerializedDomainEvent
     {
         return Object.assign(this.serializeEvent(), {
             $name: this._name,

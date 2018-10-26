@@ -2,6 +2,7 @@ import { DomainEvent } from "./domain-event";
 import { AggregateState } from "./aggregate-state";
 import { given } from "@nivinjoseph/n-defensive";
 import { ApplicationException } from "@nivinjoseph/n-exception";
+import { SerializedAggregateRoot } from "./serialized-aggregate-root";
 
 
 export abstract class AggregateRoot<T extends AggregateState>
@@ -13,11 +14,16 @@ export abstract class AggregateRoot<T extends AggregateState>
 
 
     public get id(): string { return this._state.id; }
+    
     public get retroEvents(): ReadonlyArray<DomainEvent<T>> { return this._retroEvents.orderBy(t => t.version); }
     public get retroVersion(): number { return this._retroVersion; } 
+    
     public get currentEvents(): ReadonlyArray<DomainEvent<T>> { return this._currentEvents.orderBy(t => t.version); }
     public get currentVersion(): number { return this._state.version; }
+    
     public get events(): ReadonlyArray<DomainEvent<T>> { return [...this._retroEvents, ...this._currentEvents].orderBy(t => t.version); }
+    public get version(): number { return this.currentVersion; }
+
     public get updatedAt(): number { return this.events.orderByDesc(t => t.version)[0].occurredAt; }
 
 
@@ -65,11 +71,11 @@ export abstract class AggregateRoot<T extends AggregateState>
     }
 
 
-    public serialize(): object
+    public serialize(): SerializedAggregateRoot<T>
     {
         return {
             $id: this.id,
-            $version: this.currentVersion,
+            $version: this.version,
             $updatedAt: this.updatedAt,
             $state: this.state,
             $events: this.events.map(t => t.serialize())
