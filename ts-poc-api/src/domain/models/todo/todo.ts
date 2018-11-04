@@ -2,7 +2,7 @@ import { given } from "@nivinjoseph/n-defensive";
 import "@nivinjoseph/n-ext";
 import { TodoState } from "./todo-state";
 import { TodoMarkedAsCompletedEvent } from "./events/todo-marked-as-completed-event";
-import { AggregateRoot, SerializedAggregateRoot, AggregateState } from "@nivinjoseph/n-domain";
+import { AggregateRoot, SerializedAggregateRoot } from "@nivinjoseph/n-domain";
 import { TodoTitleUpdatedEvent } from "./events/todo-title-updated-event";
 import { TodoDescriptionUpdatedEvent } from "./events/todo-description-updated-event";
 import { TodoCreatedEvent } from "./events/todo-created-event";
@@ -10,38 +10,12 @@ import { TodoCreatedEvent } from "./events/todo-created-event";
 
 export class Todo extends AggregateRoot<TodoState>
 {
-    public get id(): string { return this.state.id; }
     public get createdAt(): number { return this.events.find(t => t.name === (<Object>TodoCreatedEvent).getTypeName()).occurredAt; }
     public get title(): string { return this.state.title; }
     public get description(): string { return this.state.description; }
     public get isCompleted(): boolean { return this.state.isCompleted; }
 
-
-    // public constructor(id: string, createdAt: number, title: string, description: string, isCompleted: boolean, updatedAt: number)
-    // {
-    //     given(id, "id").ensureHasValue().ensureIsString();
-    //     given(createdAt, "createdAt").ensureHasValue().ensureIsNumber().ensure(t => t > 0);
-    //     given(title, "title").ensureHasValue().ensureIsString();
-    //     given(description, "description").ensureIsString();
-    //     given(isCompleted, "isCompleted").ensureHasValue().ensureIsBoolean();
-    //     given(updatedAt, "updatedAt").ensureHasValue().ensureIsNumber();
-
-    //     this._id = id;
-    //     this._createdAt = createdAt;
-    //     this._title = title;
-    //     this._description = description;
-    //     this._isCompleted = isCompleted;
-    //     this._updatedAt = updatedAt;
-    // }
-
-
-    // public constructor(events: ReadonlyArray<SourcedEvent>)
-    // {
-    //     given(events, "events").ensureHasValue().ensureIsArray().ensure(t => t.length > 0);
-
-    //     events.forEach(t => this.applyEvent(t));
-    // }
-
+    
     public static deserialize(data: object): Todo
     {
         const eventTypes = [
@@ -51,7 +25,7 @@ export class Todo extends AggregateRoot<TodoState>
             TodoMarkedAsCompletedEvent
         ];
 
-        return AggregateRoot.deserialize(Todo, eventTypes, data as SerializedAggregateRoot<AggregateState>) as Todo;
+        return AggregateRoot.deserialize(Todo, eventTypes, data as SerializedAggregateRoot) as Todo;
     }
 
 

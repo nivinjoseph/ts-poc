@@ -1,10 +1,9 @@
 import { given } from "@nivinjoseph/n-defensive";
 import { TodoState } from "../todo-state";
-import { TodoDomainEvent } from "./todo-domain-event";
-import { SerializedDomainEvent } from "@nivinjoseph/n-domain";
+import { SerializedDomainEvent, DomainEvent } from "@nivinjoseph/n-domain";
 
 
-export class TodoTitleUpdatedEvent extends TodoDomainEvent
+export class TodoTitleUpdatedEvent extends DomainEvent<TodoState>
 {
     private readonly _title: string;
 
@@ -16,7 +15,7 @@ export class TodoTitleUpdatedEvent extends TodoDomainEvent
         this._title = title;
     }
 
-    public static deserializeEvent(data: SerializedDomainEvent | any): TodoTitleUpdatedEvent
+    public static deserializeEvent(data: SerializedDomainEvent & Serialized): TodoTitleUpdatedEvent
     {
         given(data, "data").ensureHasValue()
             .ensureHasStructure({
@@ -30,7 +29,7 @@ export class TodoTitleUpdatedEvent extends TodoDomainEvent
     }
 
     
-    protected serializeEvent(): object
+    protected serializeEvent(): Serialized
     {
         return {
             title: this._title
@@ -41,4 +40,10 @@ export class TodoTitleUpdatedEvent extends TodoDomainEvent
     {
         state.title = this._title;
     }
+}
+
+
+interface Serialized
+{
+    title: string;
 }

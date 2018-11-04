@@ -128,6 +128,7 @@ if (!isDev)
             }
         }
     });
+    
     plugins.push(...[
         new MiniCssExtractPlugin({
             filename: "client.bundle.css"

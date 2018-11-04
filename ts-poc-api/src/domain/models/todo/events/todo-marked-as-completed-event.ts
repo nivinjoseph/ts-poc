@@ -1,10 +1,9 @@
-import { TodoDomainEvent } from "./todo-domain-event";
 import { TodoState } from "../todo-state";
 import { given } from "@nivinjoseph/n-defensive";
-import { SerializedDomainEvent } from "@nivinjoseph/n-domain";
+import { SerializedDomainEvent, DomainEvent } from "@nivinjoseph/n-domain";
 
 
-export class TodoMarkedAsCompletedEvent extends TodoDomainEvent
+export class TodoMarkedAsCompletedEvent extends DomainEvent<TodoState>
 {
     public static deserializeEvent(data: SerializedDomainEvent): TodoMarkedAsCompletedEvent
     {
