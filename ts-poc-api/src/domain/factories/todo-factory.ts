@@ -1,4 +1,4 @@
-import { Todo } from "../models/todo/todo";
+import { Todo } from "../aggregates/todo/todo";
 
 
 export interface TodoFactory

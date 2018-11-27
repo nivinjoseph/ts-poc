@@ -18,6 +18,7 @@ export class MarkTodoAsCompletedController extends Controller
     public constructor(todoRepository: TodoRepository)
     {
         super();
+        
         given(todoRepository, "todoRepository").ensureHasValue().ensureIsObject();
         this._todoRepository = todoRepository;
     }

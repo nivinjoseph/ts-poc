@@ -26,10 +26,10 @@
     "author": "NiviN",
     "license": "ISC",
     "devDependencies": {
-        "nodemon": "^1.18.4"
+        "nodemon": "^1.18.7"
     },
     "dependencies": {
-        "@nivinjoseph/n-app": "^1.0.56",
+        "@nivinjoseph/n-app": "^1.0.59",
         "@nivinjoseph/n-config": "^1.0.20",
         "@nivinjoseph/n-defensive": "^1.0.19",
         "@nivinjoseph/n-exception": "^1.0.15",
@@ -39,7 +39,7 @@
         "@nivinjoseph/n-sec": "^2.0.23",
         "@nivinjoseph/n-util": "^1.0.19",
         "@nivinjoseph/n-validate": "^1.0.13",
-        "@nivinjoseph/n-web": "^2.0.19",
+        "@nivinjoseph/n-web": "^3.0.3",
         "@types/jquery": "^3.3.10",
         "@types/mocha": "^5.2.5",
         "@types/node": "^8.10.21",

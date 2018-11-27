@@ -1,16 +1,23 @@
 import { TodoRepository } from "../../domain/repositories/todo-repository";
-import { Todo } from "../../domain/models/todo/todo";
 import { given } from "@nivinjoseph/n-defensive";
-import { TodoNotFoundException } from "../exceptions/todo-not-found-exception";
+import { Todo } from "../../domain/aggregates/todo/todo";
+import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
+import { inject } from "@nivinjoseph/n-ject";
+import { DomainContext } from "@nivinjoseph/n-domain";
 
 
+@inject("DomainContext")
 export class InMemoryTodoRepository implements TodoRepository
 {
+    private readonly _domainContext: DomainContext;
     private readonly _todos: { [index: string]: StorageModel };
     
     
-    public constructor()
+    public constructor(domainContext: DomainContext)
     {
+        given(domainContext, "domainContext").ensureHasValue().ensureIsObject();
+        this._domainContext = domainContext;
+        
         this._todos = {};
     }
     
@@ -19,9 +26,9 @@ export class InMemoryTodoRepository implements TodoRepository
     {
         const result = new Array<Todo>();
 
-        for (let key in this._todos)
+        for (const key in this._todos)
         {
-            result.push(Todo.deserialize(this._todos[key].data));
+            result.push(Todo.deserialize(this._domainContext, this._todos[key].data));
         }
 
         return Promise.resolve(result.orderByDesc(t => t.updatedAt));
@@ -34,7 +41,7 @@ export class InMemoryTodoRepository implements TodoRepository
         if (!this._todos[id])
             return Promise.reject(new TodoNotFoundException(id));
         
-        const result = Todo.deserialize(this._todos[id].data);
+        const result = Todo.deserialize(this._domainContext, this._todos[id].data);
         return Promise.resolve(result);
     }
     
@@ -69,6 +76,7 @@ export class InMemoryTodoRepository implements TodoRepository
         return Promise.resolve();
     }
 }
+
 
 interface StorageModel
 {

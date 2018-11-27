@@ -1,7 +1,6 @@
 import { Controller, command, route } from "@nivinjoseph/n-web";
 import * as Routes from "../routes";
 import { inject } from "@nivinjoseph/n-ject";
-import { TodoRepository } from "../../../domain/repositories/todo-repository";
 import { given } from "@nivinjoseph/n-defensive";
 import { TodoFactory } from "../../../domain/factories/todo-factory";
 import { Validator, strval } from "@nivinjoseph/n-validate";
@@ -10,20 +9,18 @@ import { ValidationException } from "../../exceptions/validation-exception";
 
 @route(Routes.command.createTodo)
 @command
-@inject("TodoFactory", "TodoRepository") 
+@inject("TodoFactory") 
 export class CreateTodoController extends Controller
 {
     private readonly _todoFactory: TodoFactory;
-    private readonly _todoRepository: TodoRepository;
 
 
-    public constructor(todoFactory: TodoFactory, todoRepository: TodoRepository)
+    public constructor(todoFactory: TodoFactory)
     {
         super();
+        
         given(todoFactory, "todoFactory").ensureHasValue().ensureIsObject();
-        given(todoRepository, "todoRepository").ensureHasValue().ensureIsObject();
         this._todoFactory = todoFactory;
-        this._todoRepository = todoRepository;
     }
     
     
@@ -34,7 +31,6 @@ export class CreateTodoController extends Controller
         this.validateModel(model);
         
         const todo = await this._todoFactory.create(model.title, model.description);
-        await this._todoRepository.save(todo);
         return {
             id: todo.id,
             title: todo.title,
