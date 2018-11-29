@@ -2,7 +2,7 @@
     "env": "dev",
     "PORT": 4000,
     "dbConfig": {
-        "host": "localhost",
+        "host": "ts-poc-postgres",
         "port": 5432,
         "database": "tspocdb",
         "username": "postgres",
