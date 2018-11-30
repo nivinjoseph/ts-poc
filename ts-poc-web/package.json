@@ -16,7 +16,7 @@
         "nodemon": "nodemon --ignore client/ --ignore test/ --inspect=4101 ./src/server/server.js",
         "predev": "npm run ts-build",
         "dev": "npm run ts-compile-watch & npm run webpack-build-watch & npm run nodemon",
-        "dev-docker-start": "docker run -it --name ts-poc-web --hostname ts-poc-web --network ts-poc -p 4100:4100 -v $(pwd):/www -w /www node:8 /bin/bash",
+        "dev-docker-start": "docker run -it --rm --name ts-poc-web --hostname ts-poc-web --network ts-poc -p 4100:4100 -v $(pwd):/www -w /www node:8 /bin/bash -c 'rm -rf node_modules && npm install && npm run dev'",
         "dev-docker-stop": "docker stop ts-poc-web && docker rm ts-poc-web",
         "pretest": "npm run ts-build",
         "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true",
