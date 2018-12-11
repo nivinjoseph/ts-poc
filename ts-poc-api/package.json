@@ -16,7 +16,7 @@
         "db-stop": "docker stop tspoc-postgres && docker rm tspoc-postgres",
         "nodemon": "nodemon --ignore client/ --ignore test/ --inspect=4001 ./src/api/server.js",
         "predev": "npm run ts-build",
-        "dev": "npm run ts-compile-watch & npm run nodemon",
+        "dev": "concurrently \"npm:ts-compile-watch\" \"npm:nodemon\"",
         "pretest": "npm run ts-build",
         "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true",
         "build": "env=prod npm run ts-build",
@@ -27,6 +27,7 @@
     "author": "NiviN",
     "license": "ISC",
     "devDependencies": {
+        "concurrently": "^4.1.0",
         "nodemon": "^1.18.7"
     },
     "dependencies": {
