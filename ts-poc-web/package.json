@@ -17,11 +17,11 @@
         "predev": "npm run ts-build",
         "dev": "concurrently \"npm:ts-compile-watch\" \"npm:webpack-build-watch\" \"npm:nodemon\"",
         "pretest": "npm run ts-build",
-        "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register './test/**/*.test.js' || true",
+        "test": "mocha --timeout 7200000 --reporter spec --ui tdd --require ts-node/register \"./test/**/*.test.js\" || true",
         "build": "env=prod npm run ts-build && env=prod npm run webpack-build",
         "start": "node ./src/server/server.js env=prod",
-        "clean-src": "find ./src -name '*.js' -delete -o -name '*.map' -delete -o -name '*.css' -delete",
-        "clean-test": "find ./test -name '*.js' -delete -o -name '*.map' -delete"
+        "clean-src": "find ./src -name \"*.js\" -delete -o -name \"*.map\" -delete -o -name \"*.css\" -delete",
+        "clean-test": "find ./test -name \"*.js\" -delete -o -name \"*.map\" -delete"
     },
     "author": "NiviN",
     "license": "ISC",
@@ -32,9 +32,9 @@
     "dependencies": {
         "@nivinjoseph/n-app": "^1.0.59",
         "@nivinjoseph/n-config": "^1.0.20",
-        "@nivinjoseph/n-defensive": "^1.0.19",
+        "@nivinjoseph/n-defensive": "^1.0.20",
         "@nivinjoseph/n-exception": "^1.0.15",
-        "@nivinjoseph/n-ext": "^1.0.28",
+        "@nivinjoseph/n-ext": "^1.0.32",
         "@nivinjoseph/n-ject": "^1.0.22",
         "@nivinjoseph/n-log": "^1.0.5",
         "@nivinjoseph/n-sec": "^2.0.23",

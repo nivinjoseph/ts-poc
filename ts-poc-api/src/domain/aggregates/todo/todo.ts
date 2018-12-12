@@ -10,7 +10,6 @@ import { TodoCreated } from "./events/todo-created";
 
 export class Todo extends AggregateRoot<TodoState>
 {
-    public get createdAt(): number { return this.events.find(t => t.name === (<Object>TodoCreated).getTypeName()).occurredAt; }
     public get title(): string { return this.state.title; }
     public get description(): string { return this.state.description; }
     public get isCompleted(): boolean { return this.state.isCompleted; }

@@ -32,7 +32,7 @@ export class DefaultTodoFactory implements TodoFactory
         
         title = title.trim();
         description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null;
-        const event = new TodoCreated({}, DomainHelper.generateId(), title, description);
+        const event = new TodoCreated({$isCreatedEvent: true}, DomainHelper.generateId(), title, description);
         const todo = new Todo(this._domainContext, [event]);
         await this._todoRepo.save(todo);
         return await this._todoRepo.get(todo.id);
