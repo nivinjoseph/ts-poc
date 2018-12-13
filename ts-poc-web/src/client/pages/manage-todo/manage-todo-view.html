@@ -9,6 +9,7 @@
             <div class="control">
                 <input class="input" type="text" v-model="title" placeholder="Title">
             </div>
+            <p class="help is-danger">{{errors.title}}</p>
         </div>
         
         <div class="field">
@@ -16,15 +17,18 @@
             <div class="control">
                 <textarea class="textarea" v-model="description" placeholder="description"></textarea>
             </div>
+            <p class="help is-danger">{{errors.description}}</p>
         </div>
         
         <div class="field is-grouped">
             <div class="control">
-                <button class="button is-link" v-on:click.prevent="save">Save</button>
+                <button class="button is-link" v-on:click.prevent="save" v-bind:disabled="hasErrors">Save</button>
             </div>
             <div class="control">
                 <router-link class="button is-text" to="/todos">Cancel</router-link>
             </div>
         </div>
+        
+        <p class="help is-danger" v-show="hasErrors">Please fix all errors</p>
     </form>
 </div>
