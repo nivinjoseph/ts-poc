@@ -39,7 +39,7 @@ export class LocalTodoService implements TodoService
     {
         given(id, "id").ensureHasValue().ensureIsString();
         
-        return Promise.resolve(this._todos.find(t => t.id === id));
+        return Promise.resolve(this._todos.find(t => t.id === id) as Todo);
     }
     
     public createTodo(title: string, description: string): Promise<Todo>
@@ -65,7 +65,7 @@ export class LocalTodoService implements TodoService
         given(title, "title").ensureHasValue().ensureIsString();
         given(description, "description").ensureIsString();
         
-        const todo = this._todos.find(t => t.id === id);
+        const todo = this._todos.find(t => t.id === id) as Todo;
         todo.title = title;
         todo.description = description;
         
@@ -76,7 +76,7 @@ export class LocalTodoService implements TodoService
     {
         given(id, "id").ensureHasValue().ensureIsString();
         
-        const todo = this._todos.find(t => t.id === id);
+        const todo = this._todos.find(t => t.id === id) as Todo;
         todo.isCompleted = true;
         
         return Promise.resolve();
@@ -86,7 +86,7 @@ export class LocalTodoService implements TodoService
     {
         given(id, "id").ensureHasValue().ensureIsString();
         
-        const todo = this._todos.find(t => t.id === id);
+        const todo = this._todos.find(t => t.id === id) as Todo;
         todo.isDeleted = true;
 
         return Promise.resolve();
