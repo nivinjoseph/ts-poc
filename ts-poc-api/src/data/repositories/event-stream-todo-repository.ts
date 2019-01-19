@@ -32,16 +32,7 @@ export class EventStreamTodoRepository implements TodoRepository
     {
         const sql = `select data from event_stream;`;
         const queryResult = await this._db.executeQuery<any>(sql);
-        const eventData = queryResult.rows.map(t => t.data as DomainEventData);
-        const groupedEventData = eventData.reduce((acc: any, t) =>
-        {
-            if (!acc[t.$aggregateId as any])
-                acc[t.$aggregateId as any] = [];
-            
-            acc[t.$aggregateId as any].push(t);
-            return acc;
-        }, {});
-        
+        const groupedEventData = queryResult.rows.map(t => t.data as DomainEventData).groupBy(t => t.$aggregateId as string);
         return Object.keys(groupedEventData).map(t => Todo.deserialize(this._domainContext, groupedEventData[t]));
     }
 
