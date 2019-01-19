@@ -5,10 +5,10 @@ import { DomainEvent, DomainEventData } from "@nivinjoseph/n-domain";
 
 export class TodoDescriptionUpdated extends DomainEvent<TodoState>
 {
-    private readonly _description: string;
+    private readonly _description: string | null;
 
 
-    public constructor(data: DomainEventData, description: string)
+    public constructor(data: DomainEventData, description: string | null)
     {
         super(data);
         
@@ -43,5 +43,5 @@ export class TodoDescriptionUpdated extends DomainEvent<TodoState>
 
 interface Serialized
 {
-    description: string;
+    description: string | null;
 }

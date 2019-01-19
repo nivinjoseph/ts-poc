@@ -9,8 +9,9 @@ import { ConsoleLogger } from "@nivinjoseph/n-log";
 import { AppExceptionHandler } from "./exceptions/app-exception-handler";
 import { DefaultDbConnectionFactory } from "../data/factories/default-db-connection-factory";
 import { KnexPgDb, KnexPgUnitOfWork } from "@nivinjoseph/n-data";
-import { DbTodoRepository } from "../data/repositories/db-todo-repository";
+// import { DbTodoRepository } from "../data/repositories/db-todo-repository";
 import { SystemDomainContext } from "@nivinjoseph/n-domain";
+import { EventStreamTodoRepository } from "../data/repositories/event-stream-todo-repository";
 
 
 class Installer implements ComponentInstaller
@@ -20,14 +21,18 @@ class Installer implements ComponentInstaller
         given(registry, "registry").ensureHasValue().ensureIsObject();
         
         registry
-            // .registerSingleton("TodoRepository", InMemoryTodoRepository)
             .registerInstance("DomainContext", new SystemDomainContext())
-            .registerSingleton("TodoRepository", DbTodoRepository)
-            .registerSingleton("TodoFactory", DefaultTodoFactory)
             .registerSingleton("Logger", ConsoleLogger)
+            
             .registerSingleton("DbConnectionFactory", DefaultDbConnectionFactory)
             .registerSingleton("Db", KnexPgDb)
-            .registerScoped("UnitOfWork", KnexPgUnitOfWork);
+            .registerScoped("UnitOfWork", KnexPgUnitOfWork)
+            
+             // .registerSingleton("TodoRepository", InMemoryTodoRepository)
+            // .registerScoped("TodoRepository", DbTodoRepository)
+            .registerScoped("TodoRepository", EventStreamTodoRepository)
+            .registerScoped("TodoFactory", DefaultTodoFactory)
+            ;
     }
 }
 

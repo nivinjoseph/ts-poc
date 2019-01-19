@@ -25,7 +25,7 @@ export class DefaultTodoFactory implements TodoFactory
     }
     
     
-    public async create(title: string, description: string): Promise<Todo>
+    public async create(title: string, description: string | null): Promise<Todo>
     {
         given(title, "title").ensureHasValue().ensureIsString();
         given(description, "description").ensureIsString();

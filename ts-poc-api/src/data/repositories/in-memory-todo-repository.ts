@@ -3,7 +3,7 @@ import { given } from "@nivinjoseph/n-defensive";
 import { Todo } from "../../domain/aggregates/todo/todo";
 import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
 import { inject } from "@nivinjoseph/n-ject";
-import { DomainContext } from "@nivinjoseph/n-domain";
+import { DomainContext, AggregateRootData } from "@nivinjoseph/n-domain";
 
 
 @inject("DomainContext")
@@ -28,7 +28,7 @@ export class InMemoryTodoRepository implements TodoRepository
 
         for (const key in this._todos)
         {
-            result.push(Todo.deserialize(this._domainContext, this._todos[key].data));
+            result.push(Todo.deserialize(this._domainContext, this._todos[key].data.$events));
         }
 
         return Promise.resolve(result.orderByDesc(t => t.updatedAt));
@@ -41,7 +41,7 @@ export class InMemoryTodoRepository implements TodoRepository
         if (!this._todos[id])
             return Promise.reject(new TodoNotFoundException(id));
         
-        const result = Todo.deserialize(this._domainContext, this._todos[id].data);
+        const result = Todo.deserialize(this._domainContext, this._todos[id].data.$events);
         return Promise.resolve(result);
     }
     
@@ -49,14 +49,11 @@ export class InMemoryTodoRepository implements TodoRepository
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
 
-        const data: any = todo.serialize();
-
         const storageEntity: StorageModel = {
             id: todo.id,
             version: todo.currentVersion,
             updatedAt: todo.updatedAt,
-            data,
-            query: data.$state
+            data: todo.serialize()
         };
 
         console.log(JSON.stringify(storageEntity));
@@ -83,6 +80,5 @@ interface StorageModel
     id: string;
     version: number;
     updatedAt: number;
-    data: object;
-    query: object;
+    data: AggregateRootData;
 }

@@ -30,7 +30,7 @@ export class CreateTodoController extends Controller
 
         this.validateModel(model);
         
-        const todo = await this._todoFactory.create(model.title, model.description);
+        const todo = await this._todoFactory.create(model.title, model.description || null);
         return {
             id: todo.id,
             title: todo.title,

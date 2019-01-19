@@ -3,7 +3,7 @@ import { Db } from "@nivinjoseph/n-data";
 import { given } from "@nivinjoseph/n-defensive";
 import { inject } from "@nivinjoseph/n-ject";
 import { Todo } from "../../domain/aggregates/todo/todo";
-import { DomainContext } from "@nivinjoseph/n-domain";
+import { DomainContext, AggregateRootData } from "@nivinjoseph/n-domain";
 import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
 
 
@@ -28,7 +28,7 @@ export class DbTodoRepository implements TodoRepository
     {
         const sql = `select data from todos order by created_at;`;
         const queryResult = await this._db.executeQuery<any>(sql);
-        return queryResult.rows.map(t => Todo.deserialize(this._domainContext, t.data));
+        return queryResult.rows.map(t => Todo.deserialize(this._domainContext, (<AggregateRootData>t.data).$events));
     }
     
     public async get(id: string): Promise<Todo>
@@ -41,7 +41,7 @@ export class DbTodoRepository implements TodoRepository
         if (result.rows.length === 0)
             throw new TodoNotFoundException(id);
         
-        return Todo.deserialize(this._domainContext, result.rows[0].data);
+        return Todo.deserialize(this._domainContext, (<AggregateRootData>result.rows[0].data).$events);
     }
 
     public async save(todo: Todo): Promise<void>
@@ -49,8 +49,11 @@ export class DbTodoRepository implements TodoRepository
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
 
         const exists = await this.checkIfTodoExists(todo.id);
-        if (exists && todo.hasChanges)
+        if (exists)
         {
+            if (!todo.hasChanges)
+                return;
+            
             const sql = `update todos 
                             set version = ?, updated_at = ?, data = ? 
                             where id = ? and version = ?;`;

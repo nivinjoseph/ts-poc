@@ -32,7 +32,7 @@ export class UpdateTodoController extends Controller
 
         const todo = await this._todoRepository.get(model.id);
         todo.updateTitle(model.title);
-        todo.updateDescription(model.description);
+        todo.updateDescription(model.description || null);
 
         console.log("retro events", todo.retroEvents.length);
         console.log("current events", todo.currentEvents.length);

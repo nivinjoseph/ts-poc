@@ -2,16 +2,17 @@ import { given } from "@nivinjoseph/n-defensive";
 import "@nivinjoseph/n-ext";
 import { TodoState } from "./todo-state";
 import { TodoMarkedAsCompleted } from "./events/todo-marked-as-completed";
-import { AggregateRoot, DomainContext, AggregateRootData, DomainEvent } from "@nivinjoseph/n-domain";
+import { AggregateRoot, DomainContext, DomainEvent, AggregateState, DomainEventData } from "@nivinjoseph/n-domain";
 import { TodoTitleUpdated } from "./events/todo-title-updated";
 import { TodoDescriptionUpdated } from "./events/todo-description-updated";
 import { TodoCreated } from "./events/todo-created";
+import { NotImplementedException } from "@nivinjoseph/n-exception";
 
 
 export class Todo extends AggregateRoot<TodoState>
 {
     public get title(): string { return this.state.title; }
-    public get description(): string { return this.state.description; }
+    public get description(): string | null { return this.state.description; }
     public get isCompleted(): boolean { return this.state.isCompleted; }
 
     
@@ -21,7 +22,7 @@ export class Todo extends AggregateRoot<TodoState>
     }
     
     
-    public static deserialize(domainContext: DomainContext, data: object): Todo
+    public static deserialize(domainContext: DomainContext, eventData: ReadonlyArray<DomainEventData>): Todo
     {
         const eventTypes = [
             TodoCreated,
@@ -30,9 +31,14 @@ export class Todo extends AggregateRoot<TodoState>
             TodoMarkedAsCompleted
         ];
 
-        return AggregateRoot.deserialize(domainContext, Todo, eventTypes, data as AggregateRootData) as Todo;
+        return AggregateRoot.deserializeFromEvents(domainContext, Todo, eventTypes, eventData) as Todo;
     }
 
+    
+    public snapshot(): AggregateState & object
+    {
+        throw new NotImplementedException();
+    }
 
     public updateTitle(title: string): void
     {
@@ -43,11 +49,11 @@ export class Todo extends AggregateRoot<TodoState>
         this.applyEvent(new TodoTitleUpdated({}, title));
     }
 
-    public updateDescription(description: string): void
+    public updateDescription(description: string | null): void
     {
         given(description, "description").ensureIsString();
 
-        description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null;
+        description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null as any;
         
         this.applyEvent(new TodoDescriptionUpdated({}, description));
     }

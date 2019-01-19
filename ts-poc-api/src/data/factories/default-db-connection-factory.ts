@@ -4,7 +4,7 @@ import { ConfigurationManager } from "@nivinjoseph/n-config";
 
 export class DefaultDbConnectionFactory implements DbConnectionFactory
 {
-    private _dbConnectionFactory: DbConnectionFactory;
+    private _dbConnectionFactory: DbConnectionFactory | null = null;
 
 
     public async create(): Promise<object>

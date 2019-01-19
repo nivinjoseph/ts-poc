@@ -7,10 +7,10 @@ export class TodoCreated extends DomainEvent<TodoState>
 {
     private readonly _todoId: string;
     private readonly _title: string;
-    private readonly _description: string;
+    private readonly _description: string | null;
 
 
-    public constructor(data: DomainEventData, todoId: string, title: string, description: string)
+    public constructor(data: DomainEventData, todoId: string, title: string, description: string | null)
     {
         super(data);
 
@@ -57,5 +57,5 @@ interface Serialized
 {
     todoId: string;
     title: string;
-    description: string;
+    description: string | null;
 }
