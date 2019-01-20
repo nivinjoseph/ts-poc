@@ -6,22 +6,27 @@ import { inject } from "@nivinjoseph/n-ject";
 import { DomainContext, DomainHelper } from "@nivinjoseph/n-domain";
 import { TodoCreated } from "../aggregates/todo/events/todo-created";
 import { TodoRepository } from "../repositories/todo-repository";
+import { UnitOfWork } from "@nivinjoseph/n-data";
 
 
-@inject("DomainContext", "TodoRepository")
+@inject("DomainContext", "TodoRepository", "UnitOfWork")
 export class DefaultTodoFactory implements TodoFactory
 {
     private readonly _domainContext: DomainContext;
     private readonly _todoRepo: TodoRepository;
+    private readonly _unitOfWork: UnitOfWork;
     
     
-    public constructor(domainContext: DomainContext, todoRepo: TodoRepository)
+    public constructor(domainContext: DomainContext, todoRepo: TodoRepository, unitOfWork: UnitOfWork)
     {
         given(domainContext, "domainContext").ensureHasValue().ensureIsObject();
         this._domainContext = domainContext;
         
         given(todoRepo, "todoRepo").ensureHasValue().ensureIsObject();
         this._todoRepo = todoRepo;
+        
+        given(unitOfWork, "unitOfWork").ensureHasValue().ensureIsObject();
+        this._unitOfWork = unitOfWork;
     }
     
     
@@ -34,7 +39,18 @@ export class DefaultTodoFactory implements TodoFactory
         description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null;
         const event = new TodoCreated({$isCreatedEvent: true}, DomainHelper.generateId(), title, description);
         const todo = new Todo(this._domainContext, [event]);
-        await this._todoRepo.save(todo);
+        
+        try 
+        {
+            await this._todoRepo.save(todo);  
+            await this._unitOfWork.commit();
+        }
+        catch (error)
+        {
+            await this._unitOfWork.rollback();
+            throw error;
+        }
+        
         return await this._todoRepo.get(todo.id);
     }
 }

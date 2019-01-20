@@ -5,22 +5,27 @@ import { TodoRepository } from "../../../domain/repositories/todo-repository";
 import { given } from "@nivinjoseph/n-defensive";
 import { Validator } from "@nivinjoseph/n-validate";
 import { ValidationException } from "../../exceptions/validation-exception";
+import { UnitOfWork } from "@nivinjoseph/n-data";
 
 
 @route(Routes.command.markTodoAsCompleted)
 @command
-@inject("TodoRepository")
+@inject("TodoRepository", "UnitOfWork")
 export class MarkTodoAsCompletedController extends Controller
 {
     private readonly _todoRepository: TodoRepository;
+    private readonly _unitOfWork: UnitOfWork;
 
 
-    public constructor(todoRepository: TodoRepository)
+    public constructor(todoRepository: TodoRepository, unitOfWork: UnitOfWork)
     {
         super();
-        
+
         given(todoRepository, "todoRepository").ensureHasValue().ensureIsObject();
         this._todoRepository = todoRepository;
+
+        given(unitOfWork, "unitOfWork").ensureHasValue().ensureIsObject();
+        this._unitOfWork = unitOfWork;
     }
 
     
@@ -32,7 +37,17 @@ export class MarkTodoAsCompletedController extends Controller
 
         const todo = await this._todoRepository.get(model.id);
         todo.markAsCompleted();
-        await this._todoRepository.save(todo);
+        
+        try 
+        {
+            await this._todoRepository.save(todo);
+            await this._unitOfWork.commit();
+        }
+        catch (error)
+        {
+            await this._unitOfWork.rollback();
+            throw error;
+        }
     }
     
     

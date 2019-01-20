@@ -23,7 +23,7 @@ export class GetAllTodosController extends Controller
     
     public async execute(): Promise<ReadonlyArray<object>>
     {
-        const todos = await this._todoRepository.getAll();
+        const todos = await this._todoRepository.getAll(true);
         return todos.map(t =>
             ({
                 id: t.id,

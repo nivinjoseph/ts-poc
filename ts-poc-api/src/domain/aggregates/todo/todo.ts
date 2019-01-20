@@ -2,11 +2,10 @@ import { given } from "@nivinjoseph/n-defensive";
 import "@nivinjoseph/n-ext";
 import { TodoState } from "./todo-state";
 import { TodoMarkedAsCompleted } from "./events/todo-marked-as-completed";
-import { AggregateRoot, DomainContext, DomainEvent, AggregateState, DomainEventData } from "@nivinjoseph/n-domain";
+import { AggregateRoot, DomainContext, DomainEvent, DomainEventData } from "@nivinjoseph/n-domain";
 import { TodoTitleUpdated } from "./events/todo-title-updated";
 import { TodoDescriptionUpdated } from "./events/todo-description-updated";
 import { TodoCreated } from "./events/todo-created";
-import { NotImplementedException } from "@nivinjoseph/n-exception";
 
 
 export class Todo extends AggregateRoot<TodoState>
@@ -16,13 +15,13 @@ export class Todo extends AggregateRoot<TodoState>
     public get isCompleted(): boolean { return this.state.isCompleted; }
 
     
-    public constructor(domainContext: DomainContext, events: ReadonlyArray<DomainEvent<TodoState>>)
+    public constructor(domainContext: DomainContext, events: ReadonlyArray<DomainEvent<TodoState>>, state?: TodoState)
     {
-        super(domainContext, events, { isCompleted: false });
+        super(domainContext, events, state || { isCompleted: false });
     }
     
     
-    public static deserialize(domainContext: DomainContext, eventData: ReadonlyArray<DomainEventData>): Todo
+    public static deserializeEvents(domainContext: DomainContext, eventData: ReadonlyArray<DomainEventData>): Todo
     {
         const eventTypes = [
             TodoCreated,
@@ -33,11 +32,24 @@ export class Todo extends AggregateRoot<TodoState>
 
         return AggregateRoot.deserializeFromEvents(domainContext, Todo, eventTypes, eventData) as Todo;
     }
+    
+    public static deserializeSnapshot(domainContext: DomainContext, snapshot: object): Todo
+    {
+        return AggregateRoot.deserializeFromSnapshot(domainContext, Todo, snapshot) as Todo;
+    }
 
     
-    public snapshot(): AggregateState & object
+    public snapshot(): TodoState | object
     {
-        throw new NotImplementedException();
+        return {
+            id: this.state.id,
+            version: this.state.version,
+            createdAt: this.state.createdAt,
+            updatedAt: this.state.updatedAt,
+            title: this.state.title,
+            description: this.state.description,
+            isCompleted: this.state.isCompleted
+        };
     }
 
     public updateTitle(title: string): void

@@ -31,7 +31,8 @@ export class DbData
     {
         const sql = `
             delete from todos;
-            delete from event_stream;
+            delete from todo_events;
+            delete from todo_snaps;
         `;
 
         try 

@@ -25,7 +25,7 @@ export class GetTodoController extends Controller
     {
         given(id, "id").ensureHasValue().ensureIsString();
         
-        const todo = await this._todoRepository.get(id);
+        const todo = await this._todoRepository.get(id, true);
         
         return {
             id: todo.id,

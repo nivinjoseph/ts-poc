@@ -11,7 +11,8 @@ import { DefaultDbConnectionFactory } from "../data/factories/default-db-connect
 import { KnexPgDb, KnexPgUnitOfWork } from "@nivinjoseph/n-data";
 // import { DbTodoRepository } from "../data/repositories/db-todo-repository";
 import { SystemDomainContext } from "@nivinjoseph/n-domain";
-import { EventStreamTodoRepository } from "../data/repositories/event-stream-todo-repository";
+// import { EventStreamTodoRepository } from "../data/repositories/event-stream-todo-repository";
+import { SnapshotTodoRepository } from "../data/repositories/snapshot-todo-repository";
 
 
 class Installer implements ComponentInstaller
@@ -30,7 +31,8 @@ class Installer implements ComponentInstaller
             
              // .registerSingleton("TodoRepository", InMemoryTodoRepository)
             // .registerScoped("TodoRepository", DbTodoRepository)
-            .registerScoped("TodoRepository", EventStreamTodoRepository)
+            // .registerScoped("TodoRepository", EventStreamTodoRepository)
+            .registerScoped("TodoRepository", SnapshotTodoRepository)
             .registerScoped("TodoFactory", DefaultTodoFactory)
             ;
     }

@@ -27,10 +27,16 @@ export class DbTables
             );
             
             
-            create table event_stream
+            create table todo_events
             (
                 id varchar (50) primary key,
-                agg_id varchar (32) not null,
+                todo_id varchar (32) not null,
+                data jsonb not null
+            );
+            
+            create table todo_snaps 
+            (
+                id varchar (32) primary key,
                 data jsonb not null
             );
         `;
@@ -38,7 +44,7 @@ export class DbTables
         try 
         {
             await this._db.executeCommand(sql);
-            await this._db.executeCommand(`create index concurrently idx_event_stream__agg_id on event_stream(agg_id);`);
+            await this._db.executeCommand(`create index concurrently idx_todo_events__todo_id on todo_events(todo_id);`);
         }
         catch (error)
         {
@@ -52,12 +58,14 @@ export class DbTables
         const sql = `
             drop table todos;
 
-            drop table event_stream;
+            drop table todo_events;
+            
+            drop table todo_snaps;
         `;
 
         try 
         {
-            await this._db.executeCommand(`drop index concurrently idx_event_stream__agg_id;`);
+            await this._db.executeCommand(`drop index concurrently idx_todo_events__todo_id;`);
             await this._db.executeCommand(sql);
         }
         catch (error)
