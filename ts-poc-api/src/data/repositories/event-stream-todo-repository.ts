@@ -46,7 +46,7 @@ export class EventStreamTodoRepository implements TodoRepository
         given(id, "id").ensureHasValue().ensureIsString();
 
         id = id.trim();
-        const sql = `select data from todo_events where todo_id = ?;`;
+        const sql = `select data from todo_events where aggregate_id = ?;`;
         const result = await this._db.executeQuery<any>(sql, id);
         if (result.rows.length === 0)
             throw new TodoNotFoundException(id);
@@ -67,7 +67,7 @@ export class EventStreamTodoRepository implements TodoRepository
         await events.forEachAsync(async t =>
         {
             const sql = `insert into todo_events 
-                            (id, todo_id, data) 
+                            (id, aggregate_id, data) 
                             values(?, ?, ?);`;
 
             const params = [t.id, t.aggregateId, t.serialize()];
@@ -85,7 +85,7 @@ export class EventStreamTodoRepository implements TodoRepository
         if (!exists)
             return;
 
-        const sql = `delete from todo_events where todo_id = ?;`;
+        const sql = `delete from todo_events where aggregate_id = ?;`;
 
         await this._db.executeCommandWithinUnitOfWork(this._unitOfWork, sql, id);
     }
@@ -93,7 +93,7 @@ export class EventStreamTodoRepository implements TodoRepository
 
     protected async checkIfTodoExists(id: string): Promise<boolean>
     {
-        const sql = `select exists (select 1 from todo_events where todo_id = ?);`;
+        const sql = `select exists (select 1 from todo_events where aggregate_id = ?);`;
 
         const result = await this._db.executeQuery<any>(sql, id);
         return result.rows[0].exists;

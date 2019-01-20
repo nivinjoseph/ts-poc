@@ -30,7 +30,7 @@ export class DbTables
             create table todo_events
             (
                 id varchar (50) primary key,
-                todo_id varchar (32) not null,
+                aggregate_id varchar (32) not null,
                 data jsonb not null
             );
             
@@ -44,7 +44,7 @@ export class DbTables
         try 
         {
             await this._db.executeCommand(sql);
-            await this._db.executeCommand(`create index concurrently idx_todo_events__todo_id on todo_events(todo_id);`);
+            await this._db.executeCommand(`create index concurrently idx_todo_events__aggregate_id on todo_events(aggregate_id);`);
         }
         catch (error)
         {
@@ -65,7 +65,7 @@ export class DbTables
 
         try 
         {
-            await this._db.executeCommand(`drop index concurrently idx_todo_events__todo_id;`);
+            await this._db.executeCommand(`drop index concurrently idx_todo_events__aggregate_id;`);
             await this._db.executeCommand(sql);
         }
         catch (error)
