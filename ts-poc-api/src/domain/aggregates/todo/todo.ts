@@ -37,20 +37,7 @@ export class Todo extends AggregateRoot<TodoState>
     {
         return AggregateRoot.deserializeFromSnapshot(domainContext, Todo, snapshot) as Todo;
     }
-
     
-    public snapshot(): TodoState | object
-    {
-        return {
-            id: this.state.id,
-            version: this.state.version,
-            createdAt: this.state.createdAt,
-            updatedAt: this.state.updatedAt,
-            title: this.state.title,
-            description: this.state.description,
-            isCompleted: this.state.isCompleted
-        };
-    }
 
     public updateTitle(title: string): void
     {

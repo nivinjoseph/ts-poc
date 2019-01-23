@@ -48,27 +48,27 @@ export class DbTodoRepository implements TodoRepository
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
 
-        const exists = await this.checkIfTodoExists(todo.id);
-        if (exists)
-        {
-            if (!todo.hasChanges)
-                return;
-            
-            const sql = `update todos 
-                            set version = ?, updated_at = ?, data = ? 
-                            where id = ? and version = ?;`;
-
-            const params = [todo.currentVersion, todo.updatedAt, todo.serialize(), todo.id, todo.retroVersion];
-
-            await this._db.executeCommand(sql, ...params);
-        }
-        else
-        {
+        // const exists = await this.checkIfTodoExists(todo.id);
+        if (!todo.isNew && !todo.hasChanges)
+            return;
+        
+        if (todo.isNew)
+        {   
             const sql = `insert into todos 
                             (id, version, created_at, updated_at, data) 
                             values(?, ?, ?, ?, ?);`;
 
             const params = [todo.id, todo.version, todo.createdAt, todo.updatedAt, todo.serialize()];
+
+            await this._db.executeCommand(sql, ...params);  
+        }
+        else
+        {
+            const sql = `update todos 
+                            set version = ?, updated_at = ?, data = ? 
+                            where id = ? and version = ?;`;
+
+            const params = [todo.currentVersion, todo.updatedAt, todo.serialize(), todo.id, todo.retroVersion];
 
             await this._db.executeCommand(sql, ...params);
         }
@@ -79,9 +79,9 @@ export class DbTodoRepository implements TodoRepository
         given(id, "id").ensureHasValue().ensureIsString();
 
         id = id.trim();
-        const exists = await this.checkIfTodoExists(id);
-        if (!exists)
-            return;
+        // const exists = await this.checkIfTodoExists(id);
+        // if (!exists)
+        //     return;
         
         const sql = `delete from todos where id = ?;`;
 
@@ -89,11 +89,11 @@ export class DbTodoRepository implements TodoRepository
     }
 
 
-    private async checkIfTodoExists(id: string): Promise<boolean>
-    {
-        const sql = `select exists (select 1 from todos where id = ?);`;
+    // private async checkIfTodoExists(id: string): Promise<boolean>
+    // {
+    //     const sql = `select exists (select 1 from todos where id = ?);`;
 
-        const result = await this._db.executeQuery<any>(sql, id);
-        return result.rows[0].exists;
-    }
+    //     const result = await this._db.executeQuery<any>(sql, id);
+    //     return result.rows[0].exists;
+    // }
 }

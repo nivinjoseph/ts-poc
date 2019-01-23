@@ -41,29 +41,29 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
 
-        const exists = await this.checkIfTodoExists(todo.id);
-        if (exists && !todo.hasChanges)
+        // const exists = await this.checkIfTodoExists(todo.id);
+        if (!todo.isNew && !todo.hasChanges)
             return;
         
         await super.save(todo);
          
-        if (exists)
-        {
-            const sql = `update todo_snaps 
-                            set data = ? 
-                            where id = ?`;
-
-            const params = [todo.snapshot(), todo.id];
-
-            await this.db.executeCommandWithinUnitOfWork(this.unitOfWork, sql, ...params);
-        }
-        else
+        if (todo.isNew)
         {
             const sql = `insert into todo_snaps 
                             (id, data) 
                             values(?, ?);`;
 
             const params = [todo.id, todo.snapshot()];
+
+            await this.db.executeCommandWithinUnitOfWork(this.unitOfWork, sql, ...params);
+        }
+        else
+        {
+            const sql = `update todo_snaps 
+                            set data = ? 
+                            where id = ?`;
+
+            const params = [todo.snapshot(), todo.id];
 
             await this.db.executeCommandWithinUnitOfWork(this.unitOfWork, sql, ...params);
         }
@@ -74,9 +74,9 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
         given(id, "id").ensureHasValue().ensureIsString();
 
         id = id.trim();
-        const exists = await this.checkIfTodoExists(id);
-        if (!exists)
-            return;
+        // const exists = await this.checkIfTodoExists(id);
+        // if (!exists)
+        //     return;
         
         await super.delete(id);
         

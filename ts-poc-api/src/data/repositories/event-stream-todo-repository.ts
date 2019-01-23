@@ -58,11 +58,11 @@ export class EventStreamTodoRepository implements TodoRepository
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
 
-        const exists = await this.checkIfTodoExists(todo.id);
-        if (exists && !todo.hasChanges)
+        // const exists = await this.checkIfTodoExists(todo.id);
+        if (!todo.isNew && !todo.hasChanges)
             return;
     
-        const events = exists ? todo.currentEvents : todo.events;
+        const events = todo.isNew ? todo.events : todo.currentEvents;
         
         await events.forEachAsync(async t =>
         {
@@ -81,9 +81,9 @@ export class EventStreamTodoRepository implements TodoRepository
         given(id, "id").ensureHasValue().ensureIsString();
 
         id = id.trim();
-        const exists = await this.checkIfTodoExists(id);
-        if (!exists)
-            return;
+        // const exists = await this.checkIfTodoExists(id);
+        // if (!exists)
+        //     return;
 
         const sql = `delete from todo_events where aggregate_id = ?;`;
 
@@ -91,11 +91,11 @@ export class EventStreamTodoRepository implements TodoRepository
     }
 
 
-    protected async checkIfTodoExists(id: string): Promise<boolean>
-    {
-        const sql = `select exists (select 1 from todo_events where aggregate_id = ?);`;
+    // protected async checkIfTodoExists(id: string): Promise<boolean>
+    // {
+    //     const sql = `select exists (select 1 from todo_events where aggregate_id = ?);`;
 
-        const result = await this._db.executeQuery<any>(sql, id);
-        return result.rows[0].exists;
-    }
+    //     const result = await this._db.executeQuery<any>(sql, id);
+    //     return result.rows[0].exists;
+    // }
 }

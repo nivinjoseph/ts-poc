@@ -42,7 +42,7 @@
         "@nivinjoseph/n-config": "^1.0.23",
         "@nivinjoseph/n-data": "^2.0.2",
         "@nivinjoseph/n-defensive": "^1.0.21",
-        "@nivinjoseph/n-domain": "^1.2.3",
+        "@nivinjoseph/n-domain": "^1.2.5",
         "@nivinjoseph/n-exception": "^1.0.16",
         "@nivinjoseph/n-ext": "^1.1.3",
         "@nivinjoseph/n-ject": "^1.1.3",
