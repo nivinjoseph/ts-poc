@@ -52,7 +52,9 @@ export class DbTables
                 data jsonb not null
             );
         `);
-        
+        await this._db.executeCommand(`
+            create index concurrently idx_todos__todo_version on todos(id, version);
+        `);
             
         await this._db.executeCommand(`
             create table todo_events
@@ -79,11 +81,16 @@ export class DbTables
     private async dropTodoTables(): Promise<void>
     {
         await this._db.executeCommand(`
+            drop index idx_todos__todo_version;
+        `);
+        await this._db.executeCommand(`
             drop table todos;
         `);
 
         
-        await this._db.executeCommand(`drop index idx_todo_events__aggregate_id;`);
+        await this._db.executeCommand(`
+            drop index idx_todo_events__aggregate_id;
+        `);
         await this._db.executeCommand(`
             drop table todo_events;
         `);
