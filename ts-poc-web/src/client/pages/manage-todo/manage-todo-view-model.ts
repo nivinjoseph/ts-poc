@@ -2,9 +2,10 @@ import { PageViewModel, template, route, NavigationService } from "@nivinjoseph/
 import * as Routes from "../routes";
 import "./manage-todo-view.scss";
 import { inject } from "@nivinjoseph/n-ject";
-import { TodoService } from "../../services/todo/todo-service";
 import { given } from "@nivinjoseph/n-defensive";
 import { Validator, strval } from "@nivinjoseph/n-validate";
+import { TodoService } from "../../../sdk/services/todo-service/todo-service";
+import { Todo } from "../../../sdk/proxies/todo/todo";
 
 
 @template(require("./manage-todo-view.html"))
@@ -14,8 +15,9 @@ export class ManageTodoViewModel extends PageViewModel
 {
     private readonly _todoService: TodoService;
     private readonly _navigationService: NavigationService;
+    
     private _operation: string;
-    private _id: string | null;
+    private _todo: Todo | null;
     private _title: string;
     private _description: string;
     private readonly _validator: Validator<this>;
@@ -42,7 +44,7 @@ export class ManageTodoViewModel extends PageViewModel
         this._todoService = todoService;
         this._navigationService = navigationService;
         this._operation = "";
-        this._id = null; 
+        this._todo = null;
         this._title = "";
         this._description = "";
         this._validator = this.createValidator();
@@ -55,12 +57,12 @@ export class ManageTodoViewModel extends PageViewModel
         if (!this.validate())
             return;
         
-        const savePromise: Promise<any> = this._id
-            ? this._todoService.updateTodo(this._id, this._title, this._description)
+        const savePromise: Promise<any> = this._todo 
+            ? this._todo.update(this._title, this._description)
             : this._todoService.createTodo(this._title, this._description);
 
         savePromise
-            .then(() => this._navigationService.navigate(Routes.listTodos, {}))
+            .then(() => this._navigationService.navigate(Routes.listTodos))
             .catch(e => console.log(e));
     }
     
@@ -74,9 +76,10 @@ export class ManageTodoViewModel extends PageViewModel
             this._todoService.getTodo(id)
                 .then(t =>
                 {
-                    this._id = t.id;
+                    this._todo = t;
+                    
                     this._title = t.title;
-                    this._description = t.description;
+                    this._description = t.description || "";
                 })
                 .catch(e => console.log(e));
         }

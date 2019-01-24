@@ -3,6 +3,7 @@ import { DefaultExceptionHandler, HttpException } from "@nivinjoseph/n-web";
 import { Logger } from "@nivinjoseph/n-log";
 import { ValidationException } from "./validation-exception";
 import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
+import { ArgumentException, ArgumentNullException, InvalidArgumentException, InvalidOperationException, ApplicationException } from "@nivinjoseph/n-exception";
 
 
 @inject("Logger")
@@ -12,6 +13,42 @@ export class AppExceptionHandler extends DefaultExceptionHandler
     {
         super(logger, true);
 
+        this.registerHandler(ArgumentException,
+            // @ts-ignore
+            (exp: ArgumentException) =>
+            {
+                throw new HttpException(400);
+            });
+
+        this.registerHandler(ArgumentNullException,
+            // @ts-ignore
+            (exp: ArgumentNullException) =>
+            {
+                throw new HttpException(400);
+            });
+
+        this.registerHandler(InvalidArgumentException,
+            // @ts-ignore
+            (exp: InvalidArgumentException) =>
+            {
+                throw new HttpException(400);
+            });
+
+        this.registerHandler(InvalidOperationException,
+            // @ts-ignore
+            (exp: InvalidOperationException) =>
+            {
+                throw new HttpException(400);
+            });
+
+        this.registerHandler(ApplicationException,
+            // @ts-ignore
+            (exp: ApplicationException) =>
+            {
+                throw new HttpException(500);
+            });
+        
+        
         this.registerHandler(TodoNotFoundException,
             // @ts-ignore
             (exp) =>

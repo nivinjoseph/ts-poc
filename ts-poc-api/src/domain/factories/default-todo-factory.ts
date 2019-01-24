@@ -6,31 +6,26 @@ import { inject } from "@nivinjoseph/n-ject";
 import { DomainContext, DomainHelper } from "@nivinjoseph/n-domain";
 import { TodoCreated } from "../aggregates/todo/events/todo-created";
 import { TodoRepository } from "../repositories/todo-repository";
-import { UnitOfWork } from "@nivinjoseph/n-data";
 
 
-@inject("DomainContext", "TodoRepository", "UnitOfWork")
+@inject("DomainContext", "TodoRepository")
 export class DefaultTodoFactory implements TodoFactory
 {
     private readonly _domainContext: DomainContext;
     private readonly _todoRepo: TodoRepository;
-    private readonly _unitOfWork: UnitOfWork;
     
     
-    public constructor(domainContext: DomainContext, todoRepo: TodoRepository, unitOfWork: UnitOfWork)
+    public constructor(domainContext: DomainContext, todoRepo: TodoRepository)
     {
         given(domainContext, "domainContext").ensureHasValue().ensureIsObject();
         this._domainContext = domainContext;
         
         given(todoRepo, "todoRepo").ensureHasValue().ensureIsObject();
         this._todoRepo = todoRepo;
-        
-        given(unitOfWork, "unitOfWork").ensureHasValue().ensureIsObject();
-        this._unitOfWork = unitOfWork;
     }
     
     
-    public async create(title: string, description: string | null): Promise<Todo>
+    public async create(title: string, description: string | null): Promise<string>
     {
         given(title, "title").ensureHasValue().ensureIsString();
         given(description, "description").ensureIsString();
@@ -39,18 +34,7 @@ export class DefaultTodoFactory implements TodoFactory
         description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null;
         const event = new TodoCreated({$isCreatedEvent: true}, DomainHelper.generateId(), title, description);
         const todo = new Todo(this._domainContext, [event]);
-        
-        try 
-        {
-            await this._todoRepo.save(todo);  
-            await this._unitOfWork.commit();
-        }
-        catch (error)
-        {
-            await this._unitOfWork.rollback();
-            throw error;
-        }
-        
-        return await this._todoRepo.get(todo.id);
+        await this._todoRepo.save(todo);
+        return todo.id;
     }
 }

@@ -56,3 +56,7 @@ https://app.pluralsight.com/library/courses/css-intro/table-of-contents
 https://app.pluralsight.com/library/courses/css-positioning-1834/table-of-contents  
 https://app.pluralsight.com/library/courses/modern-web-layout-flexbox-css-grid/table-of-contents  
 - SASS is to CSS what TypeScript is to JavaScript. So SASS is just CSS with a few extras. So all the rules of CSS apply. Hence it is very important to be very comfortable with CSS in order to be efficient. SASS has 2 syntax types, sass and scss (the file extension will be .sass or .scss depending on the syntax being used). We use the scss syntax. Learning SASS is very easy and you can find everything you need to know at https://sass-lang.com/guide.
+
+# Application architecture
+The pages of the following document describe the application architecture approach  
+https://www.lucidchart.com/invitations/accept/a2eb0822-25be-464f-bc6a-5ed224b8b1ab

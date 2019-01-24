@@ -2,9 +2,9 @@ import { PageViewModel, template, route } from "@nivinjoseph/n-app";
 import * as Routes from "../routes";
 import "./list-todos-view.scss";
 import { inject } from "@nivinjoseph/n-ject";
-import { TodoService } from "../../services/todo/todo-service";
 import { given } from "@nivinjoseph/n-defensive";
-import { Todo } from "../../models/todo";
+import { TodoService } from "../../../sdk/services/todo-service/todo-service";
+import { Todo } from "../../../sdk/proxies/todo/todo";
 
 
 @template(require("./list-todos-view.html"))
