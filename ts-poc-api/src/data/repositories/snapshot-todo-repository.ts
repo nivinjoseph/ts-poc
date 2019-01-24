@@ -3,6 +3,7 @@ import { Todo } from "../../domain/aggregates/todo/todo";
 import { given } from "@nivinjoseph/n-defensive";
 import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
 import { inject } from "@nivinjoseph/n-ject";
+import { UnitOfWork } from "@nivinjoseph/n-data";
 
 
 @inject("Db", "DomainContext", "UnitOfWork")
@@ -37,51 +38,79 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
         return Todo.deserializeSnapshot(this.domainContext, result.rows[0].data);
     }
     
-    public async save(todo: Todo): Promise<void>
+    public async save(todo: Todo, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
+        given(unitOfWork, "unitOfWork").ensureIsObject();
 
         // const exists = await this.checkIfTodoExists(todo.id);
         if (!todo.isNew && !todo.hasChanges)
             return;
         
-        await super.save(todo);
-         
-        if (todo.isNew)
+        try 
         {
-            const sql = `insert into todo_snaps 
+            await super.save(todo, unitOfWork || this.unitOfWork);
+
+            if (todo.isNew)
+            {
+                const sql = `insert into todo_snaps 
                             (id, data) 
                             values(?, ?);`;
 
-            const params = [todo.id, todo.snapshot()];
+                const params = [todo.id, todo.snapshot()];
 
-            await this.db.executeCommandWithinUnitOfWork(this.unitOfWork, sql, ...params);
-        }
-        else
-        {
-            const sql = `update todo_snaps 
+                await this.db.executeCommandWithinUnitOfWork(unitOfWork || this.unitOfWork, sql, ...params);
+            }
+            else
+            {
+                const sql = `update todo_snaps 
                             set data = ? 
                             where id = ?`;
 
-            const params = [todo.snapshot(), todo.id];
+                const params = [todo.snapshot(), todo.id];
 
-            await this.db.executeCommandWithinUnitOfWork(this.unitOfWork, sql, ...params);
+                await this.db.executeCommandWithinUnitOfWork(unitOfWork || this.unitOfWork, sql, ...params);
+            }
+            
+            if (!unitOfWork)
+                await this.unitOfWork.commit();
         }
+        catch (error)
+        {
+            if (!unitOfWork)
+                await this.unitOfWork.rollback();
+
+            throw error;   
+        }
+        
+        
     }
     
-    public async delete(id: string): Promise<void>
+    public async delete(id: string, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(id, "id").ensureHasValue().ensureIsString();
+        given(unitOfWork, "unitOfWork").ensureIsObject();
 
         id = id.trim();
         // const exists = await this.checkIfTodoExists(id);
         // if (!exists)
         //     return;
         
-        await super.delete(id);
-        
-        const sql = `delete from todo_snaps where id = ?;`;
+        try 
+        {
+            await super.delete(id, unitOfWork || this.unitOfWork);
+            const sql = `delete from todo_snaps where id = ?;`;
+            await this.db.executeCommandWithinUnitOfWork(unitOfWork || this.unitOfWork, sql, id);
+            
+            if (!unitOfWork)
+                await this.unitOfWork.commit();
+        }
+        catch (error)
+        {
+            if (!unitOfWork)
+                await this.unitOfWork.rollback();
 
-        await this.db.executeCommandWithinUnitOfWork(this.unitOfWork, sql, id);
+            throw error;   
+        }
     }
 }

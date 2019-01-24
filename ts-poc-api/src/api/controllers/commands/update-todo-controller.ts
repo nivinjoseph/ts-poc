@@ -5,27 +5,22 @@ import { TodoRepository } from "../../../domain/repositories/todo-repository";
 import { given } from "@nivinjoseph/n-defensive";
 import { Validator, strval } from "@nivinjoseph/n-validate";
 import { ValidationException } from "../../exceptions/validation-exception";
-import { UnitOfWork } from "@nivinjoseph/n-data";
 
 
 @route(Routes.command.updateTodo)
 @command
-@inject("TodoRepository", "UnitOfWork")
+@inject("TodoRepository")
 export class UpdateTodoController extends Controller
 {
     private readonly _todoRepository: TodoRepository;
-    private readonly _unitOfWork: UnitOfWork;
 
 
-    public constructor(todoRepository: TodoRepository, unitOfWork: UnitOfWork)
+    public constructor(todoRepository: TodoRepository)
     {
         super();
 
         given(todoRepository, "todoRepository").ensureHasValue().ensureIsObject();
         this._todoRepository = todoRepository;
-
-        given(unitOfWork, "unitOfWork").ensureHasValue().ensureIsObject();
-        this._unitOfWork = unitOfWork;
     }
 
 
@@ -39,16 +34,7 @@ export class UpdateTodoController extends Controller
         todo.updateTitle(model.title);
         todo.updateDescription(model.description || null);
         
-        try 
-        {
-            await this._todoRepository.save(todo);
-            await this._unitOfWork.commit();
-        }
-        catch (error)
-        {
-            await this._unitOfWork.rollback();
-            throw error;
-        }
+        await this._todoRepository.save(todo);
     }
 
 

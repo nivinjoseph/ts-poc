@@ -35,9 +35,10 @@ export class DeleteTodoController extends Controller
 
         this.validateModel(model);
 
+        // here we are passing in the unitOfWork simply as an example. This is not a practical use case.
         try 
         {
-            await this._todoRepository.delete(model.id);    
+            await this._todoRepository.delete(model.id, this._unitOfWork);    
             await this._unitOfWork.commit();
         }
         catch (error)

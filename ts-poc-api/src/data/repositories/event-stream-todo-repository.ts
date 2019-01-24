@@ -54,9 +54,10 @@ export class EventStreamTodoRepository implements TodoRepository
         return Todo.deserializeEvents(this._domainContext, result.rows.map(t => t.data));
     }
 
-    public async save(todo: Todo): Promise<void>
+    public async save(todo: Todo, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
+        given(unitOfWork, "unitOfWork").ensureIsObject();
 
         // const exists = await this.checkIfTodoExists(todo.id);
         if (!todo.isNew && !todo.hasChanges)
@@ -64,21 +65,35 @@ export class EventStreamTodoRepository implements TodoRepository
     
         const events = todo.isNew ? todo.events : todo.currentEvents;
         
-        await events.forEachAsync(async t =>
+        try 
         {
-            const sql = `insert into todo_events 
+            await events.forEachAsync(async t =>
+            {
+                const sql = `insert into todo_events 
                             (id, aggregate_id, data) 
                             values(?, ?, ?);`;
 
-            const params = [t.id, t.aggregateId, t.serialize()];
+                const params = [t.id, t.aggregateId, t.serialize()];
 
-            await this._db.executeCommandWithinUnitOfWork(this._unitOfWork, sql, ...params);
-        }, 1);
+                await this._db.executeCommandWithinUnitOfWork(unitOfWork || this._unitOfWork, sql, ...params);
+            }, 1);
+            
+            if (!unitOfWork)
+                await this._unitOfWork.commit();
+        }
+        catch (error)
+        {
+            if (!unitOfWork)
+                await this._unitOfWork.rollback();
+
+            throw error;   
+        }
     }
 
-    public async delete(id: string): Promise<void>
+    public async delete(id: string, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(id, "id").ensureHasValue().ensureIsString();
+        given(unitOfWork, "unitOfWork").ensureIsObject();
 
         id = id.trim();
         // const exists = await this.checkIfTodoExists(id);
@@ -87,7 +102,20 @@ export class EventStreamTodoRepository implements TodoRepository
 
         const sql = `delete from todo_events where aggregate_id = ?;`;
 
-        await this._db.executeCommandWithinUnitOfWork(this._unitOfWork, sql, id);
+        try 
+        {
+            await this._db.executeCommandWithinUnitOfWork(unitOfWork || this._unitOfWork, sql, id);    
+            
+            if (!unitOfWork)
+                await this._unitOfWork.commit();
+        }
+        catch (error)
+        {
+            if (!unitOfWork)
+                await this._unitOfWork.rollback();
+
+            throw error;   
+        }
     }
 
 
