@@ -17,6 +17,12 @@ export class Todo extends AggregateRoot<TodoState>
     
     public constructor(domainContext: DomainContext, events: ReadonlyArray<DomainEvent<TodoState>>, state?: TodoState)
     {
+        given(state, "state").ensureHasStructure({
+            title: "string",
+            "description?": "string",
+            isCompleted: "boolean"
+        });
+        
         super(domainContext, events, state || { isCompleted: false });
     }
     

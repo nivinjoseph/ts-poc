@@ -59,26 +59,27 @@ export class DbTodoRepository implements TodoRepository
         
         try 
         {
+            let sql = "";
+            const params = [];
+            
             if (todo.isNew)
             {
-                const sql = `insert into todos 
+                sql = `insert into todos 
                             (id, version, created_at, updated_at, data) 
                             values(?, ?, ?, ?, ?);`;
 
-                const params = [todo.id, todo.version, todo.createdAt, todo.updatedAt, todo.serialize()];
-
-                await this._db.executeCommandWithinUnitOfWork(unitOfWork || this._unitOfWork, sql, ...params);
+                params.push(todo.id, todo.version, todo.createdAt, todo.updatedAt, todo.serialize());
             }
             else
             {
-                const sql = `update todos 
+                sql = `update todos 
                             set version = ?, updated_at = ?, data = ? 
                             where id = ? and version = ?;`;
 
-                const params = [todo.currentVersion, todo.updatedAt, todo.serialize(), todo.id, todo.retroVersion];
-
-                await this._db.executeCommandWithinUnitOfWork(unitOfWork || this._unitOfWork, sql, ...params);
+                params.push(todo.currentVersion, todo.updatedAt, todo.serialize(), todo.id, todo.retroVersion);
             }
+            
+            await this._db.executeCommandWithinUnitOfWork(unitOfWork || this._unitOfWork, sql, ...params);
             
             if (!unitOfWork)
                 await this._unitOfWork.commit();

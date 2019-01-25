@@ -51,26 +51,27 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
         {
             await super.save(todo, unitOfWork || this.unitOfWork);
 
+            let sql = "";
+            const params = [];
+            
             if (todo.isNew)
             {
-                const sql = `insert into todo_snaps 
+                sql = `insert into todo_snaps 
                             (id, data) 
                             values(?, ?);`;
 
-                const params = [todo.id, todo.snapshot()];
-
-                await this.db.executeCommandWithinUnitOfWork(unitOfWork || this.unitOfWork, sql, ...params);
+                params.push(todo.id, todo.snapshot());
             }
             else
             {
-                const sql = `update todo_snaps 
+                sql = `update todo_snaps 
                             set data = ? 
                             where id = ?`;
 
-                const params = [todo.snapshot(), todo.id];
-
-                await this.db.executeCommandWithinUnitOfWork(unitOfWork || this.unitOfWork, sql, ...params);
+                params.push(todo.snapshot(), todo.id);
             }
+            
+            await this.db.executeCommandWithinUnitOfWork(unitOfWork || this.unitOfWork, sql, ...params);
             
             if (!unitOfWork)
                 await this.unitOfWork.commit();
@@ -82,8 +83,6 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
 
             throw error;   
         }
-        
-        
     }
     
     public async delete(id: string, unitOfWork?: UnitOfWork): Promise<void>

@@ -63,10 +63,9 @@ export class EventStreamTodoRepository implements TodoRepository
         if (!todo.isNew && !todo.hasChanges)
             return;
     
-        const events = todo.isNew ? todo.events : todo.currentEvents;
-        
         try 
         {
+            const events = todo.isNew ? todo.events : todo.currentEvents;
             await events.forEachAsync(async t =>
             {
                 const sql = `insert into todo_events 
