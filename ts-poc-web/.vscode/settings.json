@@ -1,0 +1,38 @@
+{
+    "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+    "editor.formatOnType": true,
+    "editor.formatOnPaste": true,
+    "typescript.tsdk": "./node_modules/typescript/lib",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/.DS_Store": true,
+        "**/*.js": {
+            "when": "$(basename).ts"
+        },
+        "**/*.map": {
+            "when": "$(basename).map"
+        },
+        "**/*.css": {
+            "when": "$(basename).scss"
+        }
+    },
+    "editor.trimAutoWhitespace": false,
+    "cSpell.userWords": [
+        "Repo",
+        "Unarchived",
+        "comms",
+        "deserialize",
+        "nivinjoseph",
+        "strval",
+        "unarchive",
+        "unarchiving"
+    ],
+    "typescript.updateImportsOnFileMove.enabled": "prompt",
+    "editor.wordWrapColumn": 120,
+    "editor.rulers": [
+        120
+    ],
+}

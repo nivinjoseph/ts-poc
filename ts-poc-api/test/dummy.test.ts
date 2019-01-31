@@ -5,6 +5,7 @@ suite("Dummy", () =>
 {
     test("this is a dummy test", () =>
     {   
-        Assert.strictEqual("Hello World", "Hello World");
+        const foo = "Hello world";
+        Assert.strictEqual(foo, "Hello world");
     });
 });
