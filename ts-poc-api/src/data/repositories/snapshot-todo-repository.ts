@@ -1,17 +1,17 @@
 import { EventStreamTodoRepository } from "./event-stream-todo-repository";
-import { Todo } from "../../domain/aggregates/todo/todo";
+import { Todo } from "../../domain/todo/todo";
 import { given } from "@nivinjoseph/n-defensive";
-import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
+import { TodoNotFoundException } from "../../domain/todo/exceptions/todo-not-found-exception";
 import { inject } from "@nivinjoseph/n-ject";
 import { UnitOfWork } from "@nivinjoseph/n-data";
 
 
-@inject("Db", "DomainContext", "UnitOfWork")
+@inject("Db", "DomainContext", "UnitOfWork", "Logger", "EventBus")
 export class SnapshotTodoRepository extends EventStreamTodoRepository
 {
     public async getAll(fromSnapshot?: boolean | undefined): Promise<ReadonlyArray<Todo>>
     {
-        given(fromSnapshot, "fromSnapshot").ensureIsBoolean();
+        given(fromSnapshot as boolean, "fromSnapshot").ensureIsBoolean();
         
         if (!fromSnapshot)
             return await super.getAll();
@@ -24,7 +24,7 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
     public async get(id: string, fromSnapshot?: boolean | undefined): Promise<Todo>
     {
         given(id, "id").ensureHasValue().ensureIsString();
-        given(fromSnapshot, "fromSnapshot").ensureIsBoolean();
+        given(fromSnapshot as boolean, "fromSnapshot").ensureIsBoolean();
         
         if (!fromSnapshot)
             return await super.get(id);
@@ -41,7 +41,7 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
     public async save(todo: Todo, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
-        given(unitOfWork, "unitOfWork").ensureIsObject();
+        given(unitOfWork as object, "unitOfWork").ensureIsObject();
 
         // const exists = await this.checkIfTodoExists(todo.id);
         if (!todo.isNew && !todo.hasChanges)
@@ -88,7 +88,7 @@ export class SnapshotTodoRepository extends EventStreamTodoRepository
     public async delete(id: string, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(id, "id").ensureHasValue().ensureIsString();
-        given(unitOfWork, "unitOfWork").ensureIsObject();
+        given(unitOfWork as object, "unitOfWork").ensureIsObject();
 
         id = id.trim();
         // const exists = await this.checkIfTodoExists(id);

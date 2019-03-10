@@ -1,10 +1,10 @@
 import { TodoFactory } from "./todo-factory";
 import { given } from "@nivinjoseph/n-defensive";
 import "@nivinjoseph/n-ext";
-import { Todo } from "../aggregates/todo/todo";
+import { Todo } from "../todo";
 import { inject } from "@nivinjoseph/n-ject";
 import { DomainContext, DomainHelper } from "@nivinjoseph/n-domain";
-import { TodoCreated } from "../aggregates/todo/events/todo-created";
+import { TodoCreated } from "../events/todo-created";
 import { TodoRepository } from "../repositories/todo-repository";
 
 
@@ -28,7 +28,7 @@ export class DefaultTodoFactory implements TodoFactory
     public async create(title: string, description: string | null): Promise<string>
     {
         given(title, "title").ensureHasValue().ensureIsString();
-        given(description, "description").ensureIsString();
+        given(description as string, "description").ensureIsString();
         
         title = title.trim();
         description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null;

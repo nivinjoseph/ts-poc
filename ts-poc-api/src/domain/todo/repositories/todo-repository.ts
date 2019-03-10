@@ -1,4 +1,4 @@
-import { Todo } from "../aggregates/todo/todo";
+import { Todo } from "../todo";
 import { UnitOfWork } from "@nivinjoseph/n-data";
 
 

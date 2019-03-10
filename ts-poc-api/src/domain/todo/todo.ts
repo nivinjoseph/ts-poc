@@ -17,7 +17,7 @@ export class Todo extends AggregateRoot<TodoState>
     
     public constructor(domainContext: DomainContext, events: ReadonlyArray<DomainEvent<TodoState>>, state?: TodoState)
     {
-        given(state, "state").ensureHasStructure({
+        given(state as object, "state").ensureHasStructure({
             title: "string",
             "description?": "string",
             isCompleted: "boolean"
@@ -56,7 +56,7 @@ export class Todo extends AggregateRoot<TodoState>
 
     public updateDescription(description: string | null): void
     {
-        given(description, "description").ensureIsString();
+        given(description as string, "description").ensureIsString();
 
         description = description && !description.isEmptyOrWhiteSpace() ? description.trim() : null as any;
         

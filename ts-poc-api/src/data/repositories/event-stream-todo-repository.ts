@@ -1,26 +1,34 @@
-import { TodoRepository } from "../../domain/repositories/todo-repository";
+import { TodoRepository } from "../../domain/todo/repositories/todo-repository";
 import { Db, UnitOfWork } from "@nivinjoseph/n-data";
 import { given } from "@nivinjoseph/n-defensive";
 import { inject } from "@nivinjoseph/n-ject";
-import { Todo } from "../../domain/aggregates/todo/todo";
+import { Todo } from "../../domain/todo/todo";
 import { DomainContext, DomainEventData } from "@nivinjoseph/n-domain";
-import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
+import { TodoNotFoundException } from "../../domain/todo/exceptions/todo-not-found-exception";
+import { Disposable } from "@nivinjoseph/n-util";
+import { Logger } from "@nivinjoseph/n-log";
+import { EventBus } from "@nivinjoseph/n-eda";
 
 
-@inject("Db", "DomainContext", "UnitOfWork")
-export class EventStreamTodoRepository implements TodoRepository
+@inject("Db", "DomainContext", "UnitOfWork", "Logger", "EventBus")
+export class EventStreamTodoRepository implements TodoRepository, Disposable
 {
     private readonly _db: Db;
     private readonly _domainContext: DomainContext;
     private readonly _unitOfWork: UnitOfWork;
+    private readonly _logger: Logger;
+    private readonly _eventBus: EventBus;
+    private _isDisposed = false;
     
     
     protected get db(): Db { return this._db; }
     protected get domainContext(): DomainContext { return this._domainContext; }
     protected get unitOfWork(): UnitOfWork { return this._unitOfWork; }
+    protected get logger(): Logger { return this._logger; }
+    protected get isDisposed(): boolean { return this._isDisposed; }
 
 
-    public constructor(db: Db, domainContext: DomainContext, unitOfWork: UnitOfWork)
+    public constructor(db: Db, domainContext: DomainContext, unitOfWork: UnitOfWork, logger: Logger, eventBus: EventBus)
     {
         given(db, "db").ensureHasValue().ensureIsObject();
         this._db = db;
@@ -30,6 +38,12 @@ export class EventStreamTodoRepository implements TodoRepository
         
         given(unitOfWork, "unitOfWork").ensureHasValue().ensureIsObject();
         this._unitOfWork = unitOfWork;
+        
+        given(logger, "logger").ensureHasValue().ensureIsObject();
+        this._logger = logger;
+        
+        given(eventBus, "eventBus").ensureHasValue().ensureIsObject();
+        this._eventBus = eventBus;
     }
 
 
@@ -37,8 +51,12 @@ export class EventStreamTodoRepository implements TodoRepository
     {
         const sql = `select data from todo_events;`;
         const queryResult = await this._db.executeQuery<any>(sql);
-        const groupedEventData = queryResult.rows.map(t => t.data as DomainEventData).groupBy(t => t.$aggregateId as string);
-        return Object.keys(groupedEventData).map(t => Todo.deserializeEvents(this._domainContext, groupedEventData[t]));
+        if (queryResult.rows.length === 0)
+            return [];
+
+        return queryResult.rows.map(t => t.data as DomainEventData)
+            .groupBy(t => t.$aggregateId as string)
+            .map(t => Todo.deserializeEvents(this._domainContext, t.values));
     }
 
     public async get(id: string): Promise<Todo>
@@ -57,7 +75,7 @@ export class EventStreamTodoRepository implements TodoRepository
     public async save(todo: Todo, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
-        given(unitOfWork, "unitOfWork").ensureIsObject();
+        given(unitOfWork as object, "unitOfWork").ensureIsObject();
 
         // const exists = await this.checkIfTodoExists(todo.id);
         if (!todo.isNew && !todo.hasChanges)
@@ -77,6 +95,8 @@ export class EventStreamTodoRepository implements TodoRepository
                 await this._db.executeCommandWithinUnitOfWork(unitOfWork || this._unitOfWork, sql, ...params);
             }, 1);
             
+            await events.forEachAsync(t => this._eventBus.publish(t), 1);
+            
             if (!unitOfWork)
                 await this._unitOfWork.commit();
         }
@@ -92,7 +112,7 @@ export class EventStreamTodoRepository implements TodoRepository
     public async delete(id: string, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(id, "id").ensureHasValue().ensureIsString();
-        given(unitOfWork, "unitOfWork").ensureIsObject();
+        given(unitOfWork as object, "unitOfWork").ensureIsObject();
 
         id = id.trim();
         // const exists = await this.checkIfTodoExists(id);
@@ -115,6 +135,16 @@ export class EventStreamTodoRepository implements TodoRepository
 
             throw error;   
         }
+    }
+    
+    public async dispose(): Promise<void>
+    {
+        if (this._isDisposed)
+            return;
+        
+        this._isDisposed = true;
+        
+        await this._logger.logWarning(`${(<Object>this).getTypeName()} being disposed.`);
     }
 
 

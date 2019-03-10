@@ -2,7 +2,7 @@ import { inject } from "@nivinjoseph/n-ject";
 import { DefaultExceptionHandler, HttpException } from "@nivinjoseph/n-web";
 import { Logger } from "@nivinjoseph/n-log";
 import { ValidationException } from "./validation-exception";
-import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
+import { TodoNotFoundException } from "../../domain/todo/exceptions/todo-not-found-exception";
 import { ArgumentException, ArgumentNullException, InvalidArgumentException, InvalidOperationException, ApplicationException } from "@nivinjoseph/n-exception";
 
 

@@ -1,10 +1,10 @@
-import { TodoRepository } from "../../domain/repositories/todo-repository";
+import { TodoRepository } from "../../domain/todo/repositories/todo-repository";
 import { Db, UnitOfWork } from "@nivinjoseph/n-data";
 import { given } from "@nivinjoseph/n-defensive";
 import { inject } from "@nivinjoseph/n-ject";
-import { Todo } from "../../domain/aggregates/todo/todo";
+import { Todo } from "../../domain/todo/todo";
 import { DomainContext, AggregateRootData } from "@nivinjoseph/n-domain";
-import { TodoNotFoundException } from "../../domain/exceptions/todo-not-found-exception";
+import { TodoNotFoundException } from "../../domain/todo/exceptions/todo-not-found-exception";
 
 
 @inject("Db", "DomainContext", "UnitOfWork")
@@ -51,7 +51,7 @@ export class DbTodoRepository implements TodoRepository
     public async save(todo: Todo, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(todo, "todo").ensureHasValue().ensureIsType(Todo);
-        given(unitOfWork, "unitOfWork").ensureIsObject();
+        given(unitOfWork as object, "unitOfWork").ensureIsObject();
 
         // const exists = await this.checkIfTodoExists(todo.id);
         if (!todo.isNew && !todo.hasChanges)
@@ -96,7 +96,7 @@ export class DbTodoRepository implements TodoRepository
     public async delete(id: string, unitOfWork?: UnitOfWork): Promise<void>
     {
         given(id, "id").ensureHasValue().ensureIsString();
-        given(unitOfWork, "unitOfWork").ensureIsObject();
+        given(unitOfWork as object, "unitOfWork").ensureIsObject();
 
         id = id.trim();
         // const exists = await this.checkIfTodoExists(id);

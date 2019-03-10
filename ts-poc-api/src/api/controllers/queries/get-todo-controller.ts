@@ -1,7 +1,7 @@
 import { Controller, route, query } from "@nivinjoseph/n-web";
 import * as Routes from "../routes";
 import { inject } from "@nivinjoseph/n-ject";
-import { TodoRepository } from "../../../domain/repositories/todo-repository";
+import { TodoRepository } from "../../../domain/todo/repositories/todo-repository";
 import { given } from "@nivinjoseph/n-defensive";
 
 
