@@ -1,6 +1,6 @@
 import { given } from "@nivinjoseph/n-defensive";
 import "@nivinjoseph/n-ext";
-import { TodoState } from "./todo-state";
+import { TodoState, TodoStateFactory } from "./todo-state";
 import { TodoMarkedAsCompleted } from "./events/todo-marked-as-completed";
 import { AggregateRoot, DomainContext, DomainEvent, DomainEventData } from "@nivinjoseph/n-domain";
 import { TodoTitleUpdated } from "./events/todo-title-updated";
@@ -23,7 +23,7 @@ export class Todo extends AggregateRoot<TodoState>
             isCompleted: "boolean"
         });
         
-        super(domainContext, events, state || { isCompleted: false });
+        super(domainContext, events, new TodoStateFactory(), state);
     }
     
     
@@ -41,7 +41,7 @@ export class Todo extends AggregateRoot<TodoState>
     
     public static deserializeSnapshot(domainContext: DomainContext, snapshot: object): Todo
     {
-        return AggregateRoot.deserializeFromSnapshot(domainContext, Todo, snapshot) as Todo;
+        return AggregateRoot.deserializeFromSnapshot(domainContext, Todo, new TodoStateFactory(), snapshot) as Todo;
     }
     
 
