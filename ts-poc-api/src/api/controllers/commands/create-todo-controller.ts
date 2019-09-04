@@ -53,12 +53,12 @@ export class CreateTodoController extends Controller
 
         validator.for<string>("title")
             .isRequired()
-            .ensureIsString()
+            .isString()
             .useValidationRule(strval.hasMaxLength(128));
 
         validator.for<string>("description")
             .isOptional()
-            .ensureIsString()
+            .isString()
             .useValidationRule(strval.hasMaxLength(500));
 
         validator.validate(model);

@@ -4,16 +4,20 @@ import { controllers } from "./controllers/controllers";
 import { AppExceptionHandler } from "./exceptions/app-exception-handler";
 import { edaConfig } from "../eda/eda-config";
 import { AppComponentInstaller } from "./app-component-installer";
+import { EdaManager } from "@nivinjoseph/n-eda";
 
 
 
+const edaManager = new EdaManager(edaConfig);
+edaManager.bootstrap();
 
-
-const server = new WebApp(ConfigurationManager.getConfig<number>("PORT"))
+const server = new WebApp(Number.parseInt(ConfigurationManager.getConfig<number>("PORT") as any)); 
+server
     .useInstaller(new AppComponentInstaller())
     .registerControllers(...controllers)
-    .enableEda(edaConfig)
     .registerExceptionHandler(AppExceptionHandler)
-    .enableCors();
+    .enableCors()
+    .registerDisposeAction(() => edaManager.dispose())
+    .containerRegistry.registerInstance(EdaManager.eventBusKey, edaManager.serviceLocator.resolve(EdaManager.eventBusKey));
 
 server.bootstrap();

@@ -55,7 +55,7 @@ export class DeleteTodoController extends Controller
 
         validator.for<string>("id")
             .isRequired()
-            .ensureIsString();
+            .isString();
 
         validator.validate(model);
 

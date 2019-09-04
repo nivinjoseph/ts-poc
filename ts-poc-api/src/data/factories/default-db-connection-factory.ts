@@ -1,52 +1,48 @@
-import { DbConnectionFactory, KnexPgDbConnectionFactory } from "@nivinjoseph/n-data";
+import { DbConnectionFactory, KnexPgDbConnectionFactory, DbConnectionConfig } from "@nivinjoseph/n-data";
 import { ConfigurationManager } from "@nivinjoseph/n-config";
-import { ObjectDisposedException } from "@nivinjoseph/n-exception";
 
 
 export class DefaultDbConnectionFactory implements DbConnectionFactory
 {
-    private _isDisposed = false;
-    private _dbConnectionFactory: DbConnectionFactory | null = null;
+    private readonly _dbConnectionFactory: DbConnectionFactory;
+    
+    public constructor()
+    {
+        if (ConfigurationManager.getConfig<string>("env") === "dev")
+        {
+            const host = ConfigurationManager.getConfig<string>("db-host");
+            const port = ConfigurationManager.getConfig<number>("db-port");
+            const database = ConfigurationManager.getConfig<string>("db-database");
+            const username = ConfigurationManager.getConfig<string>("db-username");
+            const password = ConfigurationManager.getConfig<string>("db-password");
+
+            const config: DbConnectionConfig = {
+                host,
+                port: port.toString(),
+                database,
+                username,
+                password
+            };
+
+            this._dbConnectionFactory = new KnexPgDbConnectionFactory(config);
+        }
+        else
+        {
+            const connectionString = ConfigurationManager.getConfig<string>("DATABASE_URL");
+
+            this._dbConnectionFactory = new KnexPgDbConnectionFactory(connectionString);
+        }
+    }
 
 
     public async create(): Promise<object>
     {
-        if (this._isDisposed)
-            throw new ObjectDisposedException(this);
-        
-        if (!this._dbConnectionFactory)
-        {
-            let dbConfig = ConfigurationManager.getConfig<DbConfig>("dbConfig");
-            this._dbConnectionFactory = new KnexPgDbConnectionFactory(dbConfig.host, dbConfig.port.toString(),
-                dbConfig.database, dbConfig.username, dbConfig.password);
-        }
-
-        return await this._dbConnectionFactory.create();
+        return this._dbConnectionFactory.create();
     }
 
 
     public async dispose(): Promise<void>
     {
-        if (this._isDisposed)
-            return;
-        
-        this._isDisposed = true;
-        
-        if (this._dbConnectionFactory)
-        {
-            let dbConnectionFactory = this._dbConnectionFactory;
-            this._dbConnectionFactory = null;
-            await dbConnectionFactory.dispose();
-        }
+        return this._dbConnectionFactory.dispose();
     }
-}
-
-
-interface DbConfig
-{
-    host: string;
-    port: number;
-    database: string;
-    username: string;
-    password: string;
 }
