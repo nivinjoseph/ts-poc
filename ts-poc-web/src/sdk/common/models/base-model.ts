@@ -20,7 +20,7 @@ export abstract class BaseModel
     protected constructor(dto: object, dtoStructure?: object)
     {
         given(dto, "dto").ensureHasValue().ensureIsObject();
-        given(dtoStructure, "dtoStructure").ensureIsObject();
+        given(dtoStructure as object, "dtoStructure").ensureIsObject();
         if (dtoStructure)
             given(dto, "dto").ensureHasStructure(dtoStructure);
         

@@ -42,7 +42,7 @@ export class RemoteTodoService implements TodoService
             description: description ? description.trim() : ""
         };
         
-        const response = await this._client.command("/api/command/createTodo", command);
+        const response = await this._client.command<object>("/api/command/createTodo", command);
         return new RemoteTodoProxy(response);
     }
 }

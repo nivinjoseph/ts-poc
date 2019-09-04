@@ -30,28 +30,33 @@
         "nodemon": "^1.18.7"
     },
     "dependencies": {
-        "@nivinjoseph/n-app": "^2.0.7",
-        "@nivinjoseph/n-config": "^1.0.23",
-        "@nivinjoseph/n-defensive": "^1.0.25",
-        "@nivinjoseph/n-exception": "^1.0.17",
-        "@nivinjoseph/n-ext": "^1.1.5",
-        "@nivinjoseph/n-ject": "^1.1.5",
-        "@nivinjoseph/n-log": "^1.0.7",
-        "@nivinjoseph/n-sec": "^3.0.1",
-        "@nivinjoseph/n-util": "^1.0.25",
-        "@nivinjoseph/n-validate": "^1.0.17",
-        "@nivinjoseph/n-web": "^3.2.7",
-        "@types/jquery": "^3.3.10",
+        "@nivinjoseph/n-app": "^2.0.16",
+        "@nivinjoseph/n-config": "^1.0.24",
+        "@nivinjoseph/n-defensive": "^1.0.27",
+        "@nivinjoseph/n-exception": "^1.0.18",
+        "@nivinjoseph/n-ext": "^1.1.9",
+        "@nivinjoseph/n-ject": "^1.1.8",
+        "@nivinjoseph/n-log": "^1.0.9",
+        "@nivinjoseph/n-sec": "^3.0.3",
+        "@nivinjoseph/n-util": "^1.0.31",
+        "@nivinjoseph/n-validate": "^1.0.21",
+        "@nivinjoseph/n-web": "^3.2.21",
+        "@types/jquery": "^3.3.29",
         "@types/mocha": "^5.2.5",
-        "@types/node": "^8.10.21",
+        "@types/node": "^8.10.39",
         "axios": "^0.18.0",
         "bulma": "^0.7.1",
-        "jquery": "^3.3.1",
+        "jquery": "^3.4.1",
         "material-design-icons": "^3.0.1",
         "mocha": "^5.2.0",
         "moment": "^2.22.2",
         "ts-node": "^2.1.0",
-        "tslint": "^5.11.0",
-        "typescript": "^3.1.1"
-    }
+        "tslint": "^5.16.0",
+        "typescript": "^3.4.5",
+        "typescript-tslint-plugin": "^0.3.1"
+    },
+    "browserslist": [
+        ">1%",
+        "not ie < 9"
+    ]
 }

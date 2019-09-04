@@ -13,7 +13,7 @@ export class RpcClient
 
     public constructor(baseUrl?: string)
     {
-        given(baseUrl, "baseUrl").ensureIsString();
+        given(baseUrl as string, "baseUrl").ensureIsString();
         baseUrl = baseUrl || ConfigurationManager.getConfig<string>("apiUrl");
         baseUrl = baseUrl.trim();
         if (baseUrl.endsWith("/"))

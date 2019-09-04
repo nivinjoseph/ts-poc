@@ -103,13 +103,13 @@ export class ManageTodoViewModel extends PageViewModel
         validator
             .for<string>("title")
             .isRequired().withMessage("The title field is required.")
-            .ensureIsString()
+            .isString()
             .useValidationRule(strval.hasMaxLength(50));
 
         validator
             .for<string>("description")
             .isOptional()
-            .ensureIsString()
+            .isString()
             .useValidationRule(strval.hasMaxLength(500));
 
         return validator;

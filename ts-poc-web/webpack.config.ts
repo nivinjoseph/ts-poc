@@ -26,10 +26,6 @@ const moduleRules: Array<any> = [
                 plugins: () => [
                     require("postcss-flexbugs-fixes"),
                     autoprefixer({
-                        browsers: [
-                            ">1%",
-                            "not ie < 9"
-                        ],
                         flexbox: "no-2009"
                     })
                 ]
@@ -100,7 +96,7 @@ const moduleRules: Array<any> = [
 ];
 
 const plugins = [
-    new cleanWebpackPlugin(["src/client/dist"]),
+    new cleanWebpackPlugin(),
     new htmlWebpackPlugin({
         template: "src/server/controllers/index/index-view.html",
         filename: "index-view.html",

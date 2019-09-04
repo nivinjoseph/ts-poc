@@ -26,7 +26,7 @@ export class LocalTodoProxy implements Todo
         given(title, "title").ensureHasValue().ensureIsString();
         this._title = title;
         
-        given(description, "description").ensureIsString();
+        given(description as string, "description").ensureIsString();
         this._description = description || null;
         
         this._isCompleted = false;
@@ -37,7 +37,7 @@ export class LocalTodoProxy implements Todo
     public async update(title: string, description?: string): Promise<void>
     {
         given(title, "title").ensureHasValue().ensureIsString();    
-        given(description, "description").ensureIsString();
+        given(description as string, "description").ensureIsString();
         
         this._title = title.trim();
         this._description = description ? description.trim() : null as any;
