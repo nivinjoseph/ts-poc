@@ -46,7 +46,7 @@
         "@types/node": "^8.10.39",
         "axios": "^0.18.0",
         "bulma": "^0.7.1",
-        "jquery": "^3.4.1",
+        "jquery": "^3.5.0",
         "material-design-icons": "^3.0.1",
         "mocha": "^5.2.0",
         "moment": "^2.22.2",
