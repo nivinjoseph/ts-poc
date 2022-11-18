@@ -30,7 +30,7 @@
         "nodemon": "^1.18.7"
     },
     "dependencies": {
-        "@nivinjoseph/n-app": "^2.0.16",
+        "@nivinjoseph/n-app": "^4.0.34",
         "@nivinjoseph/n-config": "^1.0.24",
         "@nivinjoseph/n-defensive": "^1.0.27",
         "@nivinjoseph/n-exception": "^1.0.18",
